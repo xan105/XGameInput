@@ -12,6 +12,9 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 */
 
 #include "XGameInput.h"
+#include <SDL3/SDL.h>
+#include <unordered_map>
+#include <atomic>
 
 extern HANDLE InputFusion_SDL_Init_Wait;
 
@@ -20,32 +23,32 @@ namespace {
     constexpr auto INPUTFUSION_SDL_EVENT_LOOP_DELAY = 10;
 
     const std::unordered_map<SDL_GamepadButton, DWORD> BUTTONS = {
-        { SDL_GAMEPAD_BUTTON_SOUTH, XGAMEINPUT_GAMEPAD_BUTTON_SOUTH },
-        { SDL_GAMEPAD_BUTTON_EAST, XGAMEINPUT_GAMEPAD_BUTTON_EAST },
-        { SDL_GAMEPAD_BUTTON_WEST, XGAMEINPUT_GAMEPAD_BUTTON_WEST },
-        { SDL_GAMEPAD_BUTTON_NORTH, XGAMEINPUT_GAMEPAD_BUTTON_NORTH },
-        { SDL_GAMEPAD_BUTTON_BACK, XGAMEINPUT_GAMEPAD_BUTTON_SELECT },
-        { SDL_GAMEPAD_BUTTON_GUIDE, XGAMEINPUT_GAMEPAD_BUTTON_GUIDE },
-        { SDL_GAMEPAD_BUTTON_START, XGAMEINPUT_GAMEPAD_BUTTON_START },
-        { SDL_GAMEPAD_BUTTON_LEFT_STICK, XGAMEINPUT_GAMEPAD_BUTTON_LEFT_STICK },
-        { SDL_GAMEPAD_BUTTON_RIGHT_STICK, XGAMEINPUT_GAMEPAD_BUTTON_RIGHT_STICK },
-        { SDL_GAMEPAD_BUTTON_LEFT_SHOULDER, XGAMEINPUT_GAMEPAD_BUTTON_LEFT_SHOULDER },
-        { SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER, XGAMEINPUT_GAMEPAD_BUTTON_RIGHT_SHOULDER },
-        { SDL_GAMEPAD_BUTTON_DPAD_UP, XGAMEINPUT_GAMEPAD_BUTTON_DPAD_UP },
-        { SDL_GAMEPAD_BUTTON_DPAD_DOWN, XGAMEINPUT_GAMEPAD_BUTTON_DPAD_DOWN },
-        { SDL_GAMEPAD_BUTTON_DPAD_LEFT, XGAMEINPUT_GAMEPAD_BUTTON_DPAD_LEFT },
-        { SDL_GAMEPAD_BUTTON_DPAD_RIGHT, XGAMEINPUT_GAMEPAD_BUTTON_DPAD_RIGHT },
-        { SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1, XGAMEINPUT_GAMEPAD_BUTTON_RIGHT_PADDLE1 },
-        { SDL_GAMEPAD_BUTTON_LEFT_PADDLE1, XGAMEINPUT_GAMEPAD_BUTTON_LEFT_PADDLE1 },
-        { SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2, XGAMEINPUT_GAMEPAD_BUTTON_RIGHT_PADDLE2 },
-        { SDL_GAMEPAD_BUTTON_LEFT_PADDLE2, XGAMEINPUT_GAMEPAD_BUTTON_LEFT_PADDLE2 },
-        { SDL_GAMEPAD_BUTTON_TOUCHPAD, XGAMEINPUT_GAMEPAD_BUTTON_TOUCHPAD },
-        { SDL_GAMEPAD_BUTTON_MISC1, XGAMEINPUT_GAMEPAD_BUTTON_MISC1 },
-        { SDL_GAMEPAD_BUTTON_MISC2, XGAMEINPUT_GAMEPAD_BUTTON_MISC2 },
-        { SDL_GAMEPAD_BUTTON_MISC3, XGAMEINPUT_GAMEPAD_BUTTON_MISC3 },
-        { SDL_GAMEPAD_BUTTON_MISC4, XGAMEINPUT_GAMEPAD_BUTTON_MISC4 },
-        { SDL_GAMEPAD_BUTTON_MISC5, XGAMEINPUT_GAMEPAD_BUTTON_MISC5 },
-        { SDL_GAMEPAD_BUTTON_MISC6, XGAMEINPUT_GAMEPAD_BUTTON_MISC6 }
+        { SDL_GAMEPAD_BUTTON_SOUTH, XGAMEINPUT_BUTTON_SOUTH },
+        { SDL_GAMEPAD_BUTTON_EAST, XGAMEINPUT_BUTTON_EAST },
+        { SDL_GAMEPAD_BUTTON_WEST, XGAMEINPUT_BUTTON_WEST },
+        { SDL_GAMEPAD_BUTTON_NORTH, XGAMEINPUT_BUTTON_NORTH },
+        { SDL_GAMEPAD_BUTTON_BACK, XGAMEINPUT_BUTTON_SELECT },
+        { SDL_GAMEPAD_BUTTON_GUIDE, XGAMEINPUT_BUTTON_GUIDE },
+        { SDL_GAMEPAD_BUTTON_START, XGAMEINPUT_BUTTON_START },
+        { SDL_GAMEPAD_BUTTON_LEFT_STICK, XGAMEINPUT_BUTTON_LEFT_STICK },
+        { SDL_GAMEPAD_BUTTON_RIGHT_STICK, XGAMEINPUT_BUTTON_RIGHT_STICK },
+        { SDL_GAMEPAD_BUTTON_LEFT_SHOULDER, XGAMEINPUT_BUTTON_LEFT_SHOULDER },
+        { SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER, XGAMEINPUT_BUTTON_RIGHT_SHOULDER },
+        { SDL_GAMEPAD_BUTTON_DPAD_UP, XGAMEINPUT_BUTTON_DPAD_UP },
+        { SDL_GAMEPAD_BUTTON_DPAD_DOWN, XGAMEINPUT_BUTTON_DPAD_DOWN },
+        { SDL_GAMEPAD_BUTTON_DPAD_LEFT, XGAMEINPUT_BUTTON_DPAD_LEFT },
+        { SDL_GAMEPAD_BUTTON_DPAD_RIGHT, XGAMEINPUT_BUTTON_DPAD_RIGHT },
+        { SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1, XGAMEINPUT_BUTTON_RIGHT_PADDLE1 },
+        { SDL_GAMEPAD_BUTTON_LEFT_PADDLE1, XGAMEINPUT_BUTTON_LEFT_PADDLE1 },
+        { SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2, XGAMEINPUT_BUTTON_RIGHT_PADDLE2 },
+        { SDL_GAMEPAD_BUTTON_LEFT_PADDLE2, XGAMEINPUT_BUTTON_LEFT_PADDLE2 },
+        { SDL_GAMEPAD_BUTTON_TOUCHPAD, XGAMEINPUT_BUTTON_TOUCHPAD },
+        { SDL_GAMEPAD_BUTTON_MISC1, XGAMEINPUT_BUTTON_MISC1 },
+        { SDL_GAMEPAD_BUTTON_MISC2, XGAMEINPUT_BUTTON_MISC2 },
+        { SDL_GAMEPAD_BUTTON_MISC3, XGAMEINPUT_BUTTON_MISC3 },
+        { SDL_GAMEPAD_BUTTON_MISC4, XGAMEINPUT_BUTTON_MISC4 },
+        { SDL_GAMEPAD_BUTTON_MISC5, XGAMEINPUT_BUTTON_MISC5 },
+        { SDL_GAMEPAD_BUTTON_MISC6, XGAMEINPUT_BUTTON_MISC6 }
     };
 
     const std::vector<SDL_GamepadAxis> AXIS = {
@@ -59,9 +62,10 @@ namespace {
 }
 
 extern "C" {
+
     DWORD WINAPI XGameInputGetState(DWORD PlayerIndex, XGAMEINPUT_STATE* pState) {
 
-        static std::atomic<DWORD> dwPacketNumber[XGAMEINPUT_PLAYER_MAX] = {};
+        static std::atomic<DWORD> PacketNumber[XGAMEINPUT_PLAYER_MAX] = {};
 
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pState == nullptr) {
             return ERROR_INVALID_PARAMETER;
@@ -80,7 +84,7 @@ extern "C" {
         }
 
         ZeroMemory(pState, sizeof(XGAMEINPUT_STATE));
-        pState->PacketNumber = ++dwPacketNumber[PlayerIndex];
+        pState->PacketNumber = ++PacketNumber[PlayerIndex];
 
         SDL_UpdateGamepads();
 
@@ -133,15 +137,15 @@ extern "C" {
         }
 
         SDL_RumbleGamepad(
-            gamepad, 
-            pVibration->LeftMotorSpeed, 
-            pVibration->RightMotorSpeed, 
+            gamepad,
+            pVibration->LeftMotorSpeed,
+            pVibration->RightMotorSpeed,
             0
         );
         SDL_RumbleGamepadTriggers(
-            gamepad, 
-            pVibration->LeftTriggerSpeed, 
-            pVibration->RightTriggerSpeed, 
+            gamepad,
+            pVibration->LeftTriggerSpeed,
+            pVibration->RightTriggerSpeed,
             0
         );
         SDL_UpdateGamepads();
@@ -171,93 +175,161 @@ extern "C" {
         return ERROR_SUCCESS;
     }
 
-
-
-
-    
-
-
-
-
-    /*
-
-    DWORD WINAPI XGameInputGetCapabilities(DWORD dwUserIndex, XINPUT_CAPABILITIES_EX* pCapabilities) {
-        
-        if (dwUserIndex >= XUSER_MAX_COUNT || pCapabilities == nullptr) {
+    DWORD WINAPI XGameInputGetBatteryInfo(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION* pBatteryInfo) {
+        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pBatteryInfo == nullptr) {
             return ERROR_INVALID_PARAMETER;
         }
 
         if (!(SDL_WasInit(SDL_INIT_GAMEPAD) & SDL_INIT_GAMEPAD)) {
             if (InputFusion_SDL_Init_Wait) {
                 WaitForSingleObject(InputFusion_SDL_Init_Wait, INFINITE);
-                SDL_Delay(10); // SDL event loop
+                SDL_Delay(INPUTFUSION_SDL_EVENT_LOOP_DELAY);
             }
         }
 
-        SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(dwUserIndex);
+        SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
         if (gamepad == nullptr) {
             return ERROR_DEVICE_NOT_CONNECTED;
         }
 
-        ZeroMemory(pCapabilities, sizeof(XINPUT_CAPABILITIES_EX));
+        ZeroMemory(pBatteryInfo, sizeof(XGAMEINPUT_BATTERY_INFORMATION));
+        SDL_UpdateGamepads();
+
+        int percent = -1;
+        SDL_PowerState PowerState = SDL_GetGamepadPowerInfo(gamepad, &percent);
+        switch (PowerState) {
+            case SDL_POWERSTATE_CHARGED:
+                pBatteryInfo->State = XGAMEINPUT_BATTERY_STATE_CHARGED;
+                break;
+            case SDL_POWERSTATE_CHARGING:
+                pBatteryInfo->State = XGAMEINPUT_BATTERY_STATE_CHARGING;
+                break;
+            case SDL_POWERSTATE_ON_BATTERY:
+                pBatteryInfo->State = XGAMEINPUT_BATTERY_STATE_DISCHARGING;
+                break;
+            default:
+                pBatteryInfo->State = XGAMEINPUT_BATTERY_STATE_UNKNOWN;
+        }
+        pBatteryInfo->Percent = percent;
+
+        return ERROR_SUCCESS;
+    }
+
+    DWORD WINAPI XGameInputGetCapabilities(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities) {
+
+        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pCapabilities == nullptr) {
+            return ERROR_INVALID_PARAMETER;
+        }
+
+        if (!(SDL_WasInit(SDL_INIT_GAMEPAD) & SDL_INIT_GAMEPAD)) {
+            if (InputFusion_SDL_Init_Wait) {
+                WaitForSingleObject(InputFusion_SDL_Init_Wait, INFINITE);
+                SDL_Delay(INPUTFUSION_SDL_EVENT_LOOP_DELAY);
+            }
+        }
+
+        SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
+        if (gamepad == nullptr) {
+            return ERROR_DEVICE_NOT_CONNECTED;
+        }
+
+        ZeroMemory(pCapabilities, sizeof(XGAMEINPUT_CAPABILITIES));
+        SDL_UpdateGamepads();
+
         pCapabilities->VendorId = SDL_GetGamepadVendor(gamepad);
         pCapabilities->ProductId = SDL_GetGamepadProduct(gamepad);
         pCapabilities->ProductVersion = SDL_GetGamepadProductVersion(gamepad);
-        pCapabilities->Capabilities.Type = XINPUT_DEVTYPE_GAMEPAD;
-        pCapabilities->Capabilities.SubType = XINPUT_DEVSUBTYPE_GAMEPAD;
-
-
-        Capabilities
-            XGAMEINPUT_GAMEPAD_TYPE Type
-            WORD VendorId
-            WORD ProductId
-            WORD ProductVersion
-            WORD Flags  XGAMEINPUT_GAMEPAD_WIRELESS XGAMEINPUT_GAMEPAD_RUMBLE XGAMEINPUT_GAMEPAD_TOUCHPAD XGAMEINPUT_GAMEPAD_GYRO XGAMEINPUT_GAMEPAD_ACCEL XGAMEINPUT_GAMEPAD_CAPSENSE
-            DWORD dwButtons   SDL_GamepadHasButton() / loop
-
-            float BatteryLevel  0.0f 0% -> 1.0f 100% (if wired == 1.0f)
-            SDL_PowerState SDL_GetGamepadPowerInfo(SDL_Gamepad * gamepad, int* percent);
-
-
-        SDL_UpdateGamepads();
 
         SDL_GamepadType type = SDL_GetGamepadType(gamepad);
-        if (type == SDL_GAMEPAD_TYPE_PS4 || type == SDL_GAMEPAD_TYPE_PS5 || type == SDL_GAMEPAD_TYPE_XBOXONE) {
-            pCapabilities->Capabilities.Flags |= XINPUT_CAPS_VOICE_SUPPORTED;
+        switch (type) {
+            case SDL_GAMEPAD_TYPE_XBOX360:
+                pCapabilities->Type = XGAMEINPUT_GAMEPAD_TYPE_XBOX360;
+                break;
+            case SDL_GAMEPAD_TYPE_XBOXONE:
+                pCapabilities->Type = XGAMEINPUT_GAMEPAD_TYPE_XBOXONE;
+                break;
+            case SDL_GAMEPAD_TYPE_PS3:
+                pCapabilities->Type = XGAMEINPUT_GAMEPAD_TYPE_PS3;
+                break;
+            case SDL_GAMEPAD_TYPE_PS4:
+                pCapabilities->Type = XGAMEINPUT_GAMEPAD_TYPE_PS4;
+                break;
+            case SDL_GAMEPAD_TYPE_PS5:
+                pCapabilities->Type = XGAMEINPUT_GAMEPAD_TYPE_PS5;
+                break;
+            case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO:
+                pCapabilities->Type = XGAMEINPUT_GAMEPAD_TYPE_SWITCH_PRO;
+                break;
+            // SDL 3.6
+            /*case SDL_GAMEPAD_TYPE_STEAM:
+                    pCapabilities->Type = XGAMEINPUT_GAMEPAD_TYPE_STEAM;*/
+                break;
+            default:
+                pCapabilities->Type = XGAMEINPUT_GAMEPAD_TYPE_UNKNOWN;
         }
 
-        if (type == SDL_GAMEPAD_TYPE_XBOX360 || type == SDL_GAMEPAD_TYPE_XBOXONE) {
-            pCapabilities->Capabilities.Flags |= XINPUT_CAPS_PMD_SUPPORTED;
+        SDL_JoystickConnectionState ConnectionState = SDL_GetGamepadConnectionState(gamepad);
+        if (ConnectionState == SDL_JOYSTICK_CONNECTION_WIRELESS) {
+            pCapabilities->Flags |= XGAMEINPUT_IS_WIRELESS;
         }
 
-        SDL_JoystickConnectionState connectionState = SDL_GetGamepadConnectionState(gamepad);
-        if (connectionState == SDL_JOYSTICK_CONNECTION_WIRELESS) {
-            pCapabilities->Capabilities.Flags |= XINPUT_CAPS_WIRELESS;
+        SDL_PropertiesID Properties = SDL_GetGamepadProperties(gamepad);
+        if (SDL_GetBooleanProperty(Properties, SDL_PROP_GAMEPAD_CAP_RUMBLE_BOOLEAN, false)) {
+            pCapabilities->Flags |= XGAMEINPUT_HAS_RUMBLE;
+        }
+        if (SDL_GetBooleanProperty(Properties, SDL_PROP_GAMEPAD_CAP_TRIGGER_RUMBLE_BOOLEAN, false)) {
+            pCapabilities->Flags |= XGAMEINPUT_HAS_TRIGGER_RUMBLE;
+        }
+        if (SDL_GetBooleanProperty(Properties, SDL_PROP_GAMEPAD_CAP_RGB_LED_BOOLEAN, false) ||
+            SDL_GetBooleanProperty(Properties, SDL_PROP_GAMEPAD_CAP_MONO_LED_BOOLEAN, false))
+        {
+            pCapabilities->Flags |= XGAMEINPUT_HAS_LED;
+        }
+        if (SDL_GetBooleanProperty(Properties, SDL_PROP_GAMEPAD_CAP_PLAYER_LED_BOOLEAN, false))
+        {
+            pCapabilities->Flags |= XGAMEINPUT_HAS_PLAYER_LED;
         }
 
-        SDL_PropertiesID properties = SDL_GetGamepadProperties(gamepad);
-        if (SDL_GetBooleanProperty(properties, SDL_PROP_GAMEPAD_CAP_RUMBLE_BOOLEAN, false)) {
-            pCapabilities->Capabilities.Flags |= XINPUT_CAPS_FFB_SUPPORTED;
+        int nbrTouchPads = SDL_GetNumGamepadTouchpads(gamepad);
+        if (nbrTouchPads > 0) {
+            pCapabilities->Flags |= XGAMEINPUT_HAS_TOUCHPAD;
+            pCapabilities->nbrTouchPads = nbrTouchPads;
         }
 
-        for (const auto& [sdl_button, xinput_button] : BUTTONS) {
+        if (SDL_GamepadHasSensor(gamepad, SDL_SENSOR_ACCEL) ||
+            SDL_GamepadHasSensor(gamepad, SDL_SENSOR_ACCEL_L) ||
+            SDL_GamepadHasSensor(gamepad, SDL_SENSOR_ACCEL_R)) 
+        {
+            pCapabilities->Flags |= XGAMEINPUT_HAS_ACCEL;
+        }
+        if (SDL_GamepadHasSensor(gamepad, SDL_SENSOR_GYRO) ||
+            SDL_GamepadHasSensor(gamepad, SDL_SENSOR_GYRO_L) ||
+            SDL_GamepadHasSensor(gamepad, SDL_SENSOR_GYRO_R)) 
+        {
+            pCapabilities->Flags |= XGAMEINPUT_HAS_GYRO;
+        }
+
+        // SDL 3.6
+        /*if (SDL_GamepadHasCapSense(gamepad, SDL_GAMEPAD_CAPSENSE_LEFT_STICK) ||
+            SDL_GamepadHasCapSense(gamepad, SDL_GAMEPAD_CAPSENSE_RIGHT_STICK)) 
+        {
+            pCapabilities->Flags |= XGAMEINPUT_HAS_CAPSENSE_STICK;
+        }*/
+        /*if (SDL_GamepadHasCapSense(gamepad, SDL_GAMEPAD_CAPSENSE_LEFT_GRIP) ||
+            SDL_GamepadHasCapSense(gamepad, SDL_GAMEPAD_CAPSENSE_RIGHT_GRIP))
+        {
+            pCapabilities->Flags |= XGAMEINPUT_HAS_CAPSENSE_GRIP;
+        }*/
+
+        for (const auto& [sdl_button, button] : BUTTONS) {
             if (SDL_GamepadHasButton(gamepad, sdl_button)) {
-                pCapabilities->Capabilities.Gamepad.wButtons |= xinput_button;
-            }
-            else if (sdl_button == SDL_GAMEPAD_BUTTON_START ||
-                sdl_button == SDL_GAMEPAD_BUTTON_BACK ||
-                sdl_button == SDL_GAMEPAD_BUTTON_DPAD_UP ||
-                sdl_button == SDL_GAMEPAD_BUTTON_DPAD_DOWN ||
-                sdl_button == SDL_GAMEPAD_BUTTON_DPAD_LEFT ||
-                sdl_button == SDL_GAMEPAD_BUTTON_DPAD_RIGHT) {
-                pCapabilities->Capabilities.Flags |= XINPUT_CAPS_NO_NAVIGATION;
+                ++pCapabilities->nbrButtons;
             }
         }
 
         return ERROR_SUCCESS;
     }
 
-    */
 
     /*
     XGameInputGetTouchpadState() {
@@ -266,8 +338,6 @@ extern "C" {
 
     XGameInputSetTriggerState() {
         //dual sense sdl raw packet send ?
-    }
-    */
 
-
+        */
 }

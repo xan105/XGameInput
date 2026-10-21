@@ -1,6 +1,8 @@
 LIBRARY "XGameInput.dll"
 EXPORTS
-DllMain                             @1
-XGameInputGetState                  @2
-XGameInputSetState                  @3
-XGameInputSetLED					@4
+DllMain                   @1
+XGameInputGetState        @2
+XGameInputSetState        @3
+XGameInputSetLED		  @4
+XGameInputGetBatteryInfo  @5
+XGameInputGetCapabilities @6

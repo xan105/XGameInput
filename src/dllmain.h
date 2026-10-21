@@ -14,8 +14,6 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 #pragma once
 #define WIN32_LEAN_AND_MEAN 
 #include <Windows.h>
-#include <SDL3/SDL.h>
-#include <atomic>
 
 namespace {
 	void InputFusion_SDL_SetHints();

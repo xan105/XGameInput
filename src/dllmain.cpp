@@ -12,6 +12,8 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 */
 
 #include "dllmain.h"
+#include <SDL3/SDL.h>
+#include <atomic>
 #include "version.h"
 
 HANDLE InputFusion_SDL_Init_Wait = nullptr;

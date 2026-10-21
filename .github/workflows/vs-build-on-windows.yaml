@@ -23,7 +23,7 @@ jobs:
         run: msbuild ".\vendor\SDL3\VisualC\SDL.sln" /t:SDL3:Rebuild /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform == 'x86' && 'Win32' || matrix.platform }}
          
       - name: Build solution
-        run: msbuild ".\vc\InputFusion.sln" /t:"InputFusion:Rebuild;GameInput:Rebuild;XInput:Rebuild;DInput8:Rebuild;DInput:Rebuild;WinMM:Rebuild" /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }}
+        run: msbuild ".\vc\XGameInput.sln" /t:"XGameInput:Rebuild" /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }}
         
       - name: Upload build outputs
         uses: actions/upload-artifact@v6
@@ -59,86 +59,19 @@ jobs:
           Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path $tmp | Out-Null
         
-          # InputFusion
-          New-Item -ItemType Directory -Path "$tmp\InputFusion" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\InputFusion\x64" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\InputFusion\x64\Debug" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\InputFusion\x86" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\InputFusion\x86\Debug" | Out-Null
-          Copy-Item ".\build\InputFusion\output\x64\Release\InputFusion.dll" "$tmp\InputFusion\x64" -Force
-          Copy-Item ".\build\InputFusion\output\x64\Release\InputFusion.dll" "$tmp\InputFusion\x64\InputFusion.asi" -Force
-          Copy-Item ".\build\InputFusion\output\x64\Debug\InputFusion.dll" "$tmp\InputFusion\x64\Debug" -Force
-          Copy-Item ".\build\InputFusion\output\x64\Debug\InputFusion.dll" "$tmp\InputFusion\x64\Debug\InputFusion.asi" -Force
-          Copy-Item ".\build\InputFusion\output\Win32\Release\InputFusion.dll" "$tmp\InputFusion\x86" -Force
-          Copy-Item ".\build\InputFusion\output\Win32\Release\InputFusion.dll" "$tmp\InputFusion\x86\InputFusion.asi" -Force
-          Copy-Item ".\build\InputFusion\output\Win32\Debug\InputFusion.dll" "$tmp\InputFusion\x86\Debug" -Force
-          Copy-Item ".\build\InputFusion\output\Win32\Debug\InputFusion.dll" "$tmp\InputFusion\x86\Debug\InputFusion.asi" -Force
+          New-Item -ItemType Directory -Path "$tmp\XGameInput" | Out-Null
+          New-Item -ItemType Directory -Path "$tmp\XGameInput\x64" | Out-Null
+          New-Item -ItemType Directory -Path "$tmp\XGameInput\x86" | Out-Null
 
-          # GameInput
-          New-Item -ItemType Directory -Path "$tmp\GameInput" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\GameInput\x64" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\GameInput\x64\Debug" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\GameInput\x86" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\GameInput\x86\Debug" | Out-Null
-          Copy-Item ".\build\GameInput\output\x64\Release\gameinput.dll" "$tmp\GameInput\x64" -Force
-          Copy-Item ".\build\GameInput\output\x64\Debug\gameinput.dll" "$tmp\GameInput\x64\Debug" -Force
-          Copy-Item ".\build\GameInput\output\Win32\Release\gameinput.dll" "$tmp\GameInput\x86" -Force
-          Copy-Item ".\build\GameInput\output\Win32\Debug\gameinput.dll" "$tmp\GameInput\x86\Debug" -Force
+          Copy-Item ".\build\XGameInput\output\x64\Release\XGameInput.dll" "$tmp\XGameInput\x64\XGameInput.dll" -Force
+          Copy-Item ".\build\XGameInput\output\x64\Release\XGameInput.lib" "$tmp\XGameInput\x64\XGameInput.lib" -Force
+          Copy-Item ".\src\XGameInput\XGameInput.h" "$tmp\XGameInput\x64\XGameInput.h" -Force
           
-          # XInput
-          New-Item -ItemType Directory -Path "$tmp\XInput" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\XInput\x64" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\XInput\x64\Debug" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\XInput\x86" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\XInput\x86\Debug" | Out-Null
-          Copy-Item ".\build\XInput\output\x64\Release\xinput1_4.dll" "$tmp\XInput\x64\xinput9_1_0.dll" -Force
-          Copy-Item ".\build\XInput\output\x64\Release\xinput1_4.dll" "$tmp\XInput\x64\xinput1_3.dll" -Force
-          Copy-Item ".\build\XInput\output\x64\Release\xinput1_4.dll" "$tmp\XInput\x64\xinput1_4.dll" -Force
-          Copy-Item ".\build\XInput\output\x64\Debug\xinput1_4.dll" "$tmp\XInput\x64\Debug\xinput9_1_0.dll" -Force
-          Copy-Item ".\build\XInput\output\x64\Debug\xinput1_4.dll" "$tmp\XInput\x64\Debug\xinput1_3.dll" -Force
-          Copy-Item ".\build\XInput\output\x64\Debug\xinput1_4.dll" "$tmp\XInput\x64\Debug\xinput1_4.dll" -Force
-          Copy-Item ".\build\XInput\output\Win32\Release\xinput1_4.dll" "$tmp\XInput\x86\xinput9_1_0.dll" -Force
-          Copy-Item ".\build\XInput\output\Win32\Release\xinput1_4.dll" "$tmp\XInput\x86\xinput1_3.dll" -Force
-          Copy-Item ".\build\XInput\output\Win32\Release\xinput1_4.dll" "$tmp\XInput\x86\xinput1_4.dll" -Force
-          Copy-Item ".\build\XInput\output\Win32\Debug\xinput1_4.dll" "$tmp\XInput\x86\Debug\xinput9_1_0.dll" -Force
-          Copy-Item ".\build\XInput\output\Win32\Debug\xinput1_4.dll" "$tmp\XInput\x86\Debug\xinput1_3.dll" -Force
-          Copy-Item ".\build\XInput\output\Win32\Debug\xinput1_4.dll" "$tmp\XInput\x86\Debug\xinput1_4.dll" -Force
-          
-          # DInput 8
-          New-Item -ItemType Directory -Path "$tmp\DInput8" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\DInput8\x64" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\DInput8\x64\Debug" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\DInput8\x86" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\DInput8\x86\Debug" | Out-Null
-          Copy-Item ".\build\DInput8\output\x64\Release\dinput8.dll" "$tmp\DInput8\x64" -Force
-          Copy-Item ".\build\DInput8\output\x64\Debug\dinput8.dll" "$tmp\DInput8\x64\Debug" -Force
-          Copy-Item ".\build\DInput8\output\Win32\Release\dinput8.dll" "$tmp\DInput8\x86" -Force
-          Copy-Item ".\build\DInput8\output\Win32\Debug\dinput8.dll" "$tmp\DInput8\x86\Debug" -Force
-          
-          # DInput 1-7
-          New-Item -ItemType Directory -Path "$tmp\DInput 1-7" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\DInput 1-7\x64" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\DInput 1-7\x64\Debug" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\DInput 1-7\x86" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\DInput 1-7\x86\Debug" | Out-Null
-          Copy-Item ".\build\DInput\output\x64\Release\dinput.dll" "$tmp\DInput 1-7\x64" -Force
-          Copy-Item ".\build\DInput\output\x64\Debug\dinput.dll" "$tmp\DInput 1-7\x64\Debug" -Force
-          Copy-Item ".\build\DInput\output\Win32\Release\dinput.dll" "$tmp\DInput 1-7\x86" -Force
-          Copy-Item ".\build\DInput\output\Win32\Debug\dinput.dll" "$tmp\DInput 1-7\x86\Debug" -Force
-          
-          # WinMM
-          New-Item -ItemType Directory -Path "$tmp\WinMM" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\WinMM\x64" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\WinMM\x64\Debug" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\WinMM\x86" | Out-Null
-          New-Item -ItemType Directory -Path "$tmp\WinMM\x86\Debug" | Out-Null
-          Copy-Item ".\build\WinMM\output\x64\Release\winmm.dll" "$tmp\WinMM\x64" -Force
-          Copy-Item ".\build\WinMM\output\x64\Debug\winmm.dll" "$tmp\WinMM\x64\Debug" -Force
-          Copy-Item ".\build\WinMM\output\Win32\Release\winmm.dll" "$tmp\WinMM\x86" -Force
-          Copy-Item ".\build\WinMM\output\Win32\Debug\winmm.dll" "$tmp\WinMM\x86\Debug" -Force
-          
+          Copy-Item ".\build\XGameInput\output\Win32\Release\XGameInput.dll" "$tmp\InputFusion\x86\XGameInput.dll" -Force
+          Copy-Item ".\build\XGameInput\output\Win32\Release\XGameInput.lib" "$tmp\InputFusion\x86\XGameInput.lib" -Force
+          Copy-Item ".\src\XGameInput\XGameInput.h" "$tmp\InputFusion\x86\XGameInput.h" -Force
+
           # Misc
-          Copy-Item ".\InputFusion.ini" $tmp -Force
           Copy-Item ".\README.md" $tmp -Force
           Copy-Item ".\LICENSE" $tmp -Force
 
