@@ -15,7 +15,7 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#define XGAMEINPUT_PLAYER_MAX                      4
+#define XGAMEINPUT_PLAYER_MAX                      8
 
 #define XGAMEINPUT_GAMEPAD_AXIS_MAX                32767
 #define XGAMEINPUT_GAMEPAD_AXIS_MIN                -32768
@@ -137,6 +137,7 @@ typedef DWORD(WINAPI* XGameInputSetState_t)(DWORD PlayerIndex, const XGAMEINPUT_
 typedef DWORD(WINAPI* XGameInputSetLED_t)(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);
 typedef DWORD(WINAPI* XGameInputGetBatteryInfo_t)(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);
 typedef DWORD(WINAPI* XGameInputGetCapabilities_t)(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities);
+typedef DWORD(WINAPI* XGameInputGetSteamHandle_t)(DWORD PlayerIndex, UINT64* pInputHandle);
 
 #ifdef __cplusplus
 extern "C" {
@@ -146,6 +147,7 @@ extern "C" {
     DWORD WINAPI XGameInputSetLED(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);
     DWORD WINAPI XGameInputGetBatteryInfo(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);
     DWORD WINAPI XGameInputGetCapabilities(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities);
+    DWORD WINAPI XGameInputGetSteamHandle(DWORD PlayerIndex, UINT64* pInputHandle);
 #ifdef __cplusplus
 }
 #endif

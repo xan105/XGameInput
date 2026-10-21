@@ -32,6 +32,9 @@
     <ClCompile Include="..\src\XGameInput\XGameInput.cpp">
       <Filter>Source Files\XGameInput</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\InputFusion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\XGameInput\XGameInput.def">
@@ -49,6 +52,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\InputFusion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

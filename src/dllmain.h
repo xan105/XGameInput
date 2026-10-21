@@ -15,13 +15,5 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 #define WIN32_LEAN_AND_MEAN 
 #include <Windows.h>
 
-namespace {
-	void InputFusion_SDL_SetHints();
-	bool InputFusion_SDL_Init();
-	void InputFusion_SDL_Quit();
-	void InputFusion_SDL_CloseGamepads();
-	void InputFusion_SDL_EventLoop();
-}
-
-DWORD WINAPI InputFusion_Main(LPVOID lpReserved);
+DWORD WINAPI Main(LPVOID lpReserved);
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved);

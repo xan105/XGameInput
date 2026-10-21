@@ -15,12 +15,9 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 #include <SDL3/SDL.h>
 #include <unordered_map>
 #include <atomic>
-
-extern HANDLE InputFusion_SDL_Init_Wait;
+#include "../InputFusion.h"
 
 namespace {
-
-    constexpr auto INPUTFUSION_SDL_EVENT_LOOP_DELAY = 10;
 
     const std::unordered_map<SDL_GamepadButton, DWORD> BUTTONS = {
         { SDL_GAMEPAD_BUTTON_SOUTH, XGAMEINPUT_BUTTON_SOUTH },
@@ -71,12 +68,7 @@ extern "C" {
             return ERROR_INVALID_PARAMETER;
         }
 
-        if (!(SDL_WasInit(SDL_INIT_GAMEPAD) & SDL_INIT_GAMEPAD)) {
-            if (InputFusion_SDL_Init_Wait) {
-                WaitForSingleObject(InputFusion_SDL_Init_Wait, INFINITE);
-                SDL_Delay(INPUTFUSION_SDL_EVENT_LOOP_DELAY);
-            }
-        }
+        InputFusion_SDL_Wait_ready();
 
         SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
         if (gamepad == nullptr) {
@@ -124,12 +116,7 @@ extern "C" {
             return ERROR_INVALID_PARAMETER;
         }
 
-        if (!(SDL_WasInit(SDL_INIT_GAMEPAD) & SDL_INIT_GAMEPAD)) {
-            if (InputFusion_SDL_Init_Wait) {
-                WaitForSingleObject(InputFusion_SDL_Init_Wait, INFINITE);
-                SDL_Delay(INPUTFUSION_SDL_EVENT_LOOP_DELAY);
-            }
-        }
+        InputFusion_SDL_Wait_ready();
 
         SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
         if (gamepad == nullptr) {
@@ -158,12 +145,7 @@ extern "C" {
             return ERROR_INVALID_PARAMETER;
         }
 
-        if (!(SDL_WasInit(SDL_INIT_GAMEPAD) & SDL_INIT_GAMEPAD)) {
-            if (InputFusion_SDL_Init_Wait) {
-                WaitForSingleObject(InputFusion_SDL_Init_Wait, INFINITE);
-                SDL_Delay(INPUTFUSION_SDL_EVENT_LOOP_DELAY);
-            }
-        }
+        InputFusion_SDL_Wait_ready();
 
         SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
         if (gamepad == nullptr) {
@@ -180,12 +162,7 @@ extern "C" {
             return ERROR_INVALID_PARAMETER;
         }
 
-        if (!(SDL_WasInit(SDL_INIT_GAMEPAD) & SDL_INIT_GAMEPAD)) {
-            if (InputFusion_SDL_Init_Wait) {
-                WaitForSingleObject(InputFusion_SDL_Init_Wait, INFINITE);
-                SDL_Delay(INPUTFUSION_SDL_EVENT_LOOP_DELAY);
-            }
-        }
+        InputFusion_SDL_Wait_ready();
 
         SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
         if (gamepad == nullptr) {
@@ -221,12 +198,7 @@ extern "C" {
             return ERROR_INVALID_PARAMETER;
         }
 
-        if (!(SDL_WasInit(SDL_INIT_GAMEPAD) & SDL_INIT_GAMEPAD)) {
-            if (InputFusion_SDL_Init_Wait) {
-                WaitForSingleObject(InputFusion_SDL_Init_Wait, INFINITE);
-                SDL_Delay(INPUTFUSION_SDL_EVENT_LOOP_DELAY);
-            }
-        }
+        InputFusion_SDL_Wait_ready();
 
         SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
         if (gamepad == nullptr) {
@@ -330,6 +302,27 @@ extern "C" {
         return ERROR_SUCCESS;
     }
 
+    // Returns an InputHandle_t for the gamepad that can be used with Steam Input API: https://partner.steamgames.com/doc/api/ISteamInput
+    // Returns the gamepad handle, or 0 if unavailable.
+    DWORD WINAPI XGameInputGetSteamHandle(DWORD PlayerIndex, UINT64* pInputHandle) {
+    
+        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pInputHandle == nullptr) {
+            return ERROR_INVALID_PARAMETER;
+        }
+
+        InputFusion_SDL_Wait_ready();
+
+        SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
+        if (gamepad == nullptr) {
+            return ERROR_DEVICE_NOT_CONNECTED;
+        }
+
+        *pInputHandle = SDL_GetGamepadSteamHandle(gamepad);
+
+        return ERROR_SUCCESS;
+    }
+
+    
 
     /*
     XGameInputGetTouchpadState() {

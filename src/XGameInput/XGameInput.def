@@ -6,3 +6,4 @@ XGameInputSetState        @3
 XGameInputSetLED		  @4
 XGameInputGetBatteryInfo  @5
 XGameInputGetCapabilities @6
+XGameInputGetSteamHandle  @7
