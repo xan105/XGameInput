@@ -14,8 +14,12 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#ifndef __cplusplus
+    #include <stdbool.h>
+#endif
 
 #define XGAMEINPUT_PLAYER_MAX                      8
+#define XGAMEINPUT_TOUCHPAD_MAX_FINGERS            5
 
 #define XGAMEINPUT_GAMEPAD_AXIS_MAX                32767
 #define XGAMEINPUT_GAMEPAD_AXIS_MIN                -32768
@@ -114,7 +118,7 @@ typedef struct _XGAMEINPUT_GAMEPAD_LED
     BYTE    Red;
     BYTE    Green;
     BYTE    Blue;
-} XGAMEINPUT_GAMEPAD_LED, * PXGAMEINPUT_GAMEPAD_LED;
+} XGAMEINPUT_GAMEPAD_LED, *PXGAMEINPUT_GAMEPAD_LED;
 
 typedef struct _XGAMEINPUT_BATTERY_INFORMATION {
   XGAMEINPUT_BATTERY_STATE  State;
@@ -132,12 +136,27 @@ typedef struct _XGAMEINPUT_CAPABILITIES
     WORD                    nbrTouchPads;
 } XGAMEINPUT_CAPABILITIES, *PXGAMEINPUT_CAPABILITIES;
 
+typedef struct _XGAMEINPUT_TOUCHPAD_FINGER
+{
+    bool Down;
+    float X;
+    float Y;
+    float Pressure;
+} XGAMEINPUT_TOUCHPAD_FINGER, *PXGAMEINPUT_TOUCHPAD_FINGER;
+
+typedef struct _XGAMEINPUT_TOUCHPAD_STATE
+{
+    WORD                        FingerCount;
+    XGAMEINPUT_TOUCHPAD_FINGER  Fingers[XGAMEINPUT_TOUCHPAD_MAX_FINGERS];
+} XGAMEINPUT_TOUCHPAD_STATE, *PXGAMEINPUT_TOUCHPAD_STATE;
+
 typedef DWORD(WINAPI* XGameInputGetState_t)(DWORD PlayerIndex, XGAMEINPUT_STATE* pState);
 typedef DWORD(WINAPI* XGameInputSetState_t)(DWORD PlayerIndex, const XGAMEINPUT_VIBRATION* pVibration);
 typedef DWORD(WINAPI* XGameInputSetLED_t)(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);
 typedef DWORD(WINAPI* XGameInputGetBatteryInfo_t)(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);
 typedef DWORD(WINAPI* XGameInputGetCapabilities_t)(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities);
 typedef DWORD(WINAPI* XGameInputGetSteamHandle_t)(DWORD PlayerIndex, UINT64* pInputHandle);
+typedef DWORD(WINAPI* XGameInputGetTouchpadState_t)(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPadState);
 
 #ifdef __cplusplus
 extern "C" {
@@ -148,6 +167,7 @@ extern "C" {
     DWORD WINAPI XGameInputGetBatteryInfo(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);
     DWORD WINAPI XGameInputGetCapabilities(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities);
     DWORD WINAPI XGameInputGetSteamHandle(DWORD PlayerIndex, UINT64* pInputHandle);
+    DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPadState);
 #ifdef __cplusplus
 }
 #endif

@@ -304,6 +304,7 @@ extern "C" {
 
     // Returns an InputHandle_t for the gamepad that can be used with Steam Input API: https://partner.steamgames.com/doc/api/ISteamInput
     // Returns the gamepad handle, or 0 if unavailable.
+    // If you're using SDL gamepad support in a Steam game, you must call SteamAPI_InitEx() before calling SDL_Init().
     DWORD WINAPI XGameInputGetSteamHandle(DWORD PlayerIndex, UINT64* pInputHandle) {
     
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pInputHandle == nullptr) {
@@ -322,15 +323,59 @@ extern "C" {
         return ERROR_SUCCESS;
     }
 
-    
+    DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPadState) {
 
-    /*
-    XGameInputGetTouchpadState() {
+        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pTouchPadState == nullptr) {
+            return ERROR_INVALID_PARAMETER;
+        }
 
+        InputFusion_SDL_Wait_ready();
+
+        SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
+        if (gamepad == nullptr) {
+            return ERROR_DEVICE_NOT_CONNECTED;
+        }
+
+        int fingers = SDL_GetNumGamepadTouchpadFingers(gamepad, static_cast<int>(TouchPadIndex));
+
+        if (fingers < 0) {
+            fingers = 0;
+        }
+
+        if (fingers > XGAMEINPUT_TOUCHPAD_MAX_FINGERS) {
+            fingers = XGAMEINPUT_TOUCHPAD_MAX_FINGERS;
+        }
+
+        ZeroMemory(pTouchPadState, sizeof(XGAMEINPUT_TOUCHPAD_STATE));
+        pTouchPadState->FingerCount = 0;
+
+        for (int finger=0; finger < fingers; finger++ ) 
+        {
+            XGAMEINPUT_TOUCHPAD_FINGER* state = &pTouchPadState->Fingers[finger];
+
+            if (SDL_GetGamepadTouchpadFinger(
+                gamepad,
+                static_cast<int>(TouchPadIndex),
+                finger,
+                &state->Down,
+                &state->X,
+                &state->Y,
+                &state->Pressure
+            )) {
+                ++pTouchPadState->FingerCount;
+            } else {
+                state->Down = false;
+                state->X = 0.0f;
+                state->Y = 0.0f;
+                state->Pressure = 0.0f;
+            }
+        }
+
+        return ERROR_SUCCESS;
     }
 
-    XGameInputSetTriggerState() {
+    /*XGameInputSetTriggerState() {
         //dual sense sdl raw packet send ?
 
-        */
+    */
 }
