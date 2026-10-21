@@ -3,15 +3,13 @@
   <em><strong>X</strong>an <strong>G</strong>ame <strong>I</strong>nput</em>
 </p>
 
-What if Microsoft had never abandoned XInput? 
-
-What if it supported more than just Xbox controllers, it had support for modern features like touchpads, gyroscopes, accelerometers, and rear paddles?
+What if Microsoft had never abandoned XInput? What if it supported more than just Xbox controllers, had support for modern features like touchpads, gyroscopes, accelerometers, and rear paddles?
 
 This project is a modernization of the original XInput API. It aims to preserve its familiar feel and programming paradigm while simplifying the API, expanding controller support, and exposing modern controller features.
 
 This is not a 1:1 replacement for the original XInput API. If that's what you're looking for, check out [InputFusion](https://github.com/xan105/InputFusion), the project this is built on.
 
-It's the XInput2_0.dll Microsoft never gave us.
+This is the `XInput2_0.dll` Microsoft never gave us.
 
 # What changed over the original XInput?
 
@@ -48,11 +46,7 @@ The only reason people are looking for alternatives is because of the lack of su
 
 XInput's appeal was its flat, straightforward C API: simple functions with no unnecessary abstractions. It's easy to understand, easy to integrate, and does exactly what it needs to do.
 
-GameInput was supposed to be XInput's successor, with backward compatibility between API revisions. Yet Microsoft has already introduced [breaking changes](https://learn.microsoft.com/en-us/gaming/gdk/docs/features/common/input/overviews/input-versioning?view=gdk-2604#gameinput-v1-changes) (modified function signatures and removed methods) between versions `v0` and `v1`.
-
-Its versioning scheme is also anything but straightforward. XInput made the API version explicit in the DLL name, while DirectInput allowed callers to request a specific interface version through its factory. GameInput keeps introducing new layers on top of one another: versioned C++ namespaces, distinct interface UUIDs, `QueryInterface` to switch between interface versions and now, with [v3](https://github.com/microsoftconnect/GameInput/releases#release-v3.0.26100.6154), an initialization function for selecting the API version during creation. The idea is to let developers mix and match API versions as needed. But I'd argue that this flexibility comes at the cost of an increasingly convoluted versioning scheme.
-
-Looking at GameInput's design, I can't help but see echoes of the DirectInput era: a growing maze of interfaces, objects, and methods that keeps expanding with each iteration. Having tried to reimplement DirectInput 1 through 8 on top of SDL3 for [InputFusion](https://github.com/xan105/InputFusion), this is exactly the kind of complexity I hoped we had left behind.
+Looking at GameInput's design _(XInput supposed successor)_, I can't help but see echoes of the DirectInput era: a growing maze of interfaces, objects, and methods that keeps expanding with each iteration. Having tried to reimplement DirectInput 1 through 8 on top of SDL3 for [InputFusion](https://github.com/xan105/InputFusion), this is exactly the kind of complexity I hoped we had left behind.
 
 If you are a game developer, you should probably use SDL3. But if you don't want to deal with SDL3's quirks and specifics, and just want a straightforward, XInput-style API that works with modern controllers, this project is for you.
 
