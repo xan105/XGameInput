@@ -1,5 +1,5 @@
 <p align="center">
-  <!--<img src="./logo.png" width="x" height="y"/>-->
+  <img src="./banner.png" alt="banner" width="400"/>
   <em><strong>X</strong>an <strong>G</strong>ame <strong>I</strong>nput</em>
 </p>
 
@@ -15,7 +15,7 @@ This is the `XInput2_0.dll` Microsoft never gave us.
 
   - **Broader controller support:** Supports Xbox, PlayStation, Nintendo, and over 200 other controllers through SDL3.
   
-  - **More buttons:** Supports up to 32 buttons, including rear paddles, touchpad buttons, and other special buttons.
+  - **More buttons:** Supports up to 32 buttons, including rear paddles, touchpad button, and other special buttons.
   
   - **New APIs:**
     + `XGameInputGetTouchpadState()`: Retrieves the state of fingers on a touchpad.
@@ -27,7 +27,7 @@ This is the `XInput2_0.dll` Microsoft never gave us.
   - **Expanded capabilities reporting:** `XGameInputGetCapabilities()` provides:
     + Gamepad type (PS4, PS5, Xbox 360, Steam Controller, etc.). 
     + Vendor and product IDs.
-    + Connection status, including whether the gamepad is connected wirelessly.
+    + Connection status (whether the gamepad is connected wirelessly).
     + Support for rumble, LEDs, touchpads, gyroscopes, capacitive sensors, and other features.
   
   - **Simplified API:** Keeps the API focused with fewer, more straightforward functions:
