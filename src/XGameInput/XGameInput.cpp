@@ -302,9 +302,6 @@ extern "C" {
         return ERROR_SUCCESS;
     }
 
-    // Returns an InputHandle_t for the gamepad that can be used with Steam Input API: https://partner.steamgames.com/doc/api/ISteamInput
-    // Returns the gamepad handle, or 0 if unavailable.
-    // If you're using SDL gamepad support in a Steam game, you must call SteamAPI_InitEx() before calling SDL_Init().
     DWORD WINAPI XGameInputGetSteamHandle(DWORD PlayerIndex, UINT64* pInputHandle) {
     
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pInputHandle == nullptr) {
