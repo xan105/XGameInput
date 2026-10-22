@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./banner.png" alt="banner" width="400"/>
+  <img src="./banner.png" alt="banner" width="256"/>
   <br/>
   <em><strong>X</strong>an <strong>G</strong>ame <strong>I</strong>nput</em>
 </p>
