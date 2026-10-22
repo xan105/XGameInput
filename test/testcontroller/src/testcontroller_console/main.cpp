@@ -337,20 +337,20 @@ int main()
 
     while (true)
     {
-        XGAMEINPUT_STATE state{};
-        const DWORD result = XGameInputGetState(ControllerIndex, &state);
+        XGAMEINPUT_GAMEPAD gamepad{};
+        const DWORD result = XGameInputGetState(ControllerIndex, &gamepad);
         if (result == ERROR_SUCCESS)
         {
             
             // Exit
-            if (state.Gamepad.Buttons & XGAMEINPUT_BUTTON_GUIDE)
+            if (gamepad.Buttons & XGAMEINPUT_BUTTON_GUIDE)
             {
                 std::cout << "\n[INFO] GUIDE button pressed. Force exiting.\n" << std::flush;
                 return 0;
             }
 
             // Print Caps
-            const bool startPressed = (state.Gamepad.Buttons & XGAMEINPUT_BUTTON_START) != 0;
+            const bool startPressed = (gamepad.Buttons & XGAMEINPUT_BUTTON_START) != 0;
             const bool startWasPressed = (previousButtons & XGAMEINPUT_BUTTON_START) != 0;
             if (startPressed && !startWasPressed)
             {
@@ -358,7 +358,7 @@ int main()
             }
 
             // Print Battery
-            const bool selectPressed = (state.Gamepad.Buttons & XGAMEINPUT_BUTTON_SELECT) != 0;
+            const bool selectPressed = (gamepad.Buttons & XGAMEINPUT_BUTTON_SELECT) != 0;
             const bool selectWasPressed = (previousButtons & XGAMEINPUT_BUTTON_SELECT) != 0;
             if (selectPressed && !selectWasPressed)
             {
@@ -373,7 +373,7 @@ int main()
                 std::cout << "\n[INFO] Device connected\n";
             }
 
-            LogButtonChanges(previousButtons, state.Gamepad.Buttons);
+            LogButtonChanges(previousButtons, gamepad.Buttons);
 
             if (IsTouchpadFingerDown(ControllerIndex))
             {
@@ -381,10 +381,10 @@ int main()
             }
             else
             {
-                PrintState(state.Gamepad);
+                PrintState(gamepad);
             }
 
-            previousButtons = state.Gamepad.Buttons;
+            previousButtons = gamepad.Buttons;
         }
         else
         {

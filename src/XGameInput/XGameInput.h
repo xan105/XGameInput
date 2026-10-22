@@ -96,20 +96,14 @@ typedef struct _XGAMEINPUT_GAMEPAD                              // Represents th
     SHORT   TriggerRight;                                       // The current value of the right trigger. The value is between 0 (released) and 32767 (fully pressed). 
                                                                 // (Optional) The constant `XGAMEINPUT_GAMEPAD_TRIGGER_THRESHOLD` may be used as the value which a Trigger must be greater than to register as pressed.
     SHORT   StickLeftX;                                         // Left stick X-axis value. The value is between -32768 (left) and 32767 (right). A value of 0 is centered. 
-                                                                // (Optional) The constants XGAMEINPUT_GAMEPAD_LEFT_STICK_DEADZONE or XGAMEINPUT_GAMEPAD_RIGHT_STICK_DEADZONE may be used as a positive and negative value to filter a stick input.
+                                                                // (Optional) The constants `XGAMEINPUT_GAMEPAD_LEFT_STICK_DEADZONE` or `XGAMEINPUT_GAMEPAD_RIGHT_STICK_DEADZONE` may be used as a positive and negative value to filter a stick input.
     SHORT   StickLeftY;                                         // Left stick Y-axis value. The value is between -32768 (up) and 32767 (down). A value of 0 is centered. 
-                                                                // (Optional) The constants XGAMEINPUT_GAMEPAD_LEFT_STICK_DEADZONE or XGAMEINPUT_GAMEPAD_RIGHT_STICK_DEADZONE may be used as a positive and negative value to filter a stick input.
+                                                                // (Optional) The constants `XGAMEINPUT_GAMEPAD_LEFT_STICK_DEADZONE` or `XGAMEINPUT_GAMEPAD_RIGHT_STICK_DEADZONE` may be used as a positive and negative value to filter a stick input.
     SHORT   StickRightX;                                        // Right stick X-axis value. The value is between -32768 (left) and 32767 (right). A value of 0 is centered. 
-                                                                // (Optional) The constants XGAMEINPUT_GAMEPAD_LEFT_STICK_DEADZONE or XGAMEINPUT_GAMEPAD_RIGHT_STICK_DEADZONE may be used as a positive and negative value to filter a stick input.   
+                                                                // (Optional) The constants `XGAMEINPUT_GAMEPAD_LEFT_STICK_DEADZONE` or `XGAMEINPUT_GAMEPAD_RIGHT_STICK_DEADZONE` may be used as a positive and negative value to filter a stick input.   
     SHORT   StickRightY;                                        // Right stick Y-axis value. The value is between -32768 (up) and 32767 (down). A value of 0 is centered. 
-                                                                // (Optional) The constants XGAMEINPUT_GAMEPAD_LEFT_STICK_DEADZONE or XGAMEINPUT_GAMEPAD_RIGHT_STICK_DEADZONE may be used as a positive and negative value to filter a stick input.
+                                                                // (Optional) The constants `XGAMEINPUT_GAMEPAD_LEFT_STICK_DEADZONE` or `XGAMEINPUT_GAMEPAD_RIGHT_STICK_DEADZONE` may be used as a positive and negative value to filter a stick input.
 } XGAMEINPUT_GAMEPAD, *PXGAMEINPUT_GAMEPAD;
-
-typedef struct _XGAMEINPUT_STATE                                // Describes the state of a controller.
-{
-    DWORD               PacketNumber;                           // Reference state value, this value is increased each time a gamepad updates.
-    XGAMEINPUT_GAMEPAD  Gamepad;                                // Structure containing the current state of a controller (button press, axis and trigger values).
-} XGAMEINPUT_STATE, *PXGAMEINPUT_STATE;
 
 typedef struct _XGAMEINPUT_VIBRATION                            // Specifies motor speed levels of a controller.
 {
@@ -150,30 +144,30 @@ typedef struct _XGAMEINPUT_TOUCHPAD_FINGER                      // Represents th
     float Pressure;                                             // Pressure value.
 } XGAMEINPUT_TOUCHPAD_FINGER, *PXGAMEINPUT_TOUCHPAD_FINGER;
 
-typedef struct _XGAMEINPUT_TOUCHPAD_STATE                                 // Represents the state of a touchpad.
+typedef struct _XGAMEINPUT_TOUCHPAD_STATE                                 // Represents the current state of a touchpad.
 {
     WORD                        FingerCount;                              // The count represents the number of successfully queried finger slots, not the number of fingers currently touching the pad. Each slot's `Down` field tells you whether that finger is touching it.
     XGAMEINPUT_TOUCHPAD_FINGER  Fingers[XGAMEINPUT_TOUCHPAD_MAX_FINGERS]; // Contains the current state of fingers of a touchpad.
 } XGAMEINPUT_TOUCHPAD_STATE, *PXGAMEINPUT_TOUCHPAD_STATE;
 
-typedef DWORD(WINAPI* XGameInputGetState_t)(DWORD PlayerIndex, XGAMEINPUT_STATE* pState);
+typedef DWORD(WINAPI* XGameInputGetState_t)(DWORD PlayerIndex, XGAMEINPUT_GAMEPAD* pGamepad);
 typedef DWORD(WINAPI* XGameInputSetState_t)(DWORD PlayerIndex, const XGAMEINPUT_VIBRATION* pVibration);
 typedef DWORD(WINAPI* XGameInputSetLED_t)(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);
 typedef DWORD(WINAPI* XGameInputGetBatteryInfo_t)(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);
 typedef DWORD(WINAPI* XGameInputGetCapabilities_t)(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities);
 typedef DWORD(WINAPI* XGameInputGetSteamHandle_t)(DWORD PlayerIndex, UINT64* pInputHandle);
-typedef DWORD(WINAPI* XGameInputGetTouchpadState_t)(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPadState);
+typedef DWORD(WINAPI* XGameInputGetTouchpadState_t)(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-    DWORD WINAPI XGameInputGetState(DWORD PlayerIndex, XGAMEINPUT_STATE* pState);                                               // Retrieves the current state of the specified controller.
+    DWORD WINAPI XGameInputGetState(DWORD PlayerIndex, XGAMEINPUT_GAMEPAD* pGamepad);                                           // Retrieves the current state of the specified controller.
     DWORD WINAPI XGameInputSetState(DWORD PlayerIndex, const XGAMEINPUT_VIBRATION* pVibration);                                 // Sends data to the specified controller. This function is used to activate vibration motors.
     DWORD WINAPI XGameInputSetLED(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);                                       // Update the specified controller's LED color.
     DWORD WINAPI XGameInputGetBatteryInfo(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);                     // Retrieves information on battery and charge state of the specified controller.
     DWORD WINAPI XGameInputGetCapabilities(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities);                          // Retrieves the capabilities and features of the specified controller.
     DWORD WINAPI XGameInputGetSteamHandle(DWORD PlayerIndex, UINT64* pInputHandle);                                             // Returns an `InputHandle_t` for the specified controller that can be used with the Steam Input API.
-    DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPadState);  // Retrieves the current state of the specified touchpad of the specified controller.
+    DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad);       // Retrieves the current state of the specified touchpad of the specified controller.
 #ifdef __cplusplus
 }
 #endif

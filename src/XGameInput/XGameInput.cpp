@@ -60,11 +60,9 @@ namespace {
 
 extern "C" {
 
-    DWORD WINAPI XGameInputGetState(DWORD PlayerIndex, XGAMEINPUT_STATE* pState) {
+    DWORD WINAPI XGameInputGetState(DWORD PlayerIndex, XGAMEINPUT_GAMEPAD* pGamepad) {
 
-        static std::atomic<DWORD> PacketNumber[XGAMEINPUT_PLAYER_MAX] = {};
-
-        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pState == nullptr) {
+        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pGamepad == nullptr) {
             return ERROR_INVALID_PARAMETER;
         }
 
@@ -75,36 +73,35 @@ extern "C" {
             return ERROR_DEVICE_NOT_CONNECTED;
         }
 
-        ZeroMemory(pState, sizeof(XGAMEINPUT_STATE));
-        pState->PacketNumber = ++PacketNumber[PlayerIndex];
+        ZeroMemory(pGamepad, sizeof(XGAMEINPUT_GAMEPAD));
 
         SDL_UpdateGamepads();
 
         for (const auto& [sdl_button, button] : BUTTONS) {
             if (SDL_GetGamepadButton(gamepad, sdl_button)) {
-                pState->Gamepad.Buttons |= button;
+                pGamepad->Buttons |= button;
             }
         }
 
         for (const auto& sdl_axis : AXIS) {
             SHORT value = SDL_GetGamepadAxis(gamepad, sdl_axis);
             if (sdl_axis == SDL_GAMEPAD_AXIS_LEFTX) {
-                pState->Gamepad.StickLeftX = value;
+                pGamepad->StickLeftX = value;
             }
             else if (sdl_axis == SDL_GAMEPAD_AXIS_LEFTY) {
-                pState->Gamepad.StickLeftY = value;
+                pGamepad->StickLeftY = value;
             }
             else if (sdl_axis == SDL_GAMEPAD_AXIS_RIGHTX) {
-                pState->Gamepad.StickRightX = value;
+                pGamepad->StickRightX = value;
             }
             else if (sdl_axis == SDL_GAMEPAD_AXIS_RIGHTY) {
-                pState->Gamepad.StickRightY = value;
+                pGamepad->StickRightY = value;
             }
             else if (sdl_axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER) {
-                pState->Gamepad.TriggerLeft = value;
+                pGamepad->TriggerLeft = value;
             }
             else if (sdl_axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) {
-                pState->Gamepad.TriggerRight = value;
+                pGamepad->TriggerRight = value;
             }
         }
 
@@ -320,9 +317,9 @@ extern "C" {
         return ERROR_SUCCESS;
     }
 
-    DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPadState) {
+    DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad) {
 
-        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pTouchPadState == nullptr) {
+        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pTouchPad == nullptr) {
             return ERROR_INVALID_PARAMETER;
         }
 
@@ -343,12 +340,12 @@ extern "C" {
             fingers = XGAMEINPUT_TOUCHPAD_MAX_FINGERS;
         }
 
-        ZeroMemory(pTouchPadState, sizeof(XGAMEINPUT_TOUCHPAD_STATE));
-        pTouchPadState->FingerCount = 0;
+        ZeroMemory(pTouchPad, sizeof(XGAMEINPUT_TOUCHPAD_STATE));
+        pTouchPad->FingerCount = 0;
 
         for (int finger=0; finger < fingers; finger++ ) 
         {
-            XGAMEINPUT_TOUCHPAD_FINGER* state = &pTouchPadState->Fingers[finger];
+            XGAMEINPUT_TOUCHPAD_FINGER* state = &pTouchPad->Fingers[finger];
 
             if (SDL_GetGamepadTouchpadFinger(
                 gamepad,
@@ -359,7 +356,7 @@ extern "C" {
                 &state->Y,
                 &state->Pressure
             )) {
-                ++pTouchPadState->FingerCount;
+                ++pTouchPad->FingerCount;
             } else {
                 state->Down = false;
                 state->X = 0.0f;
