@@ -64,13 +64,13 @@ int main()
     DWORD result;
     for (DWORD i=0; i < XGAMEINPUT_PLAYER_MAX; i++ )
     {
-      XGAMEINPUT_STATE state{};
-      result = XGameInputGetState(i, &state);
+      XGAMEINPUT_GAMEPAD gamepad{};
+      result = XGameInputGetState(i, &gamepad);
       if(result == ERROR_SUCCESS)
       {
           // Controller is connected
           
-          if (state.Buttons & XGAMEINPUT_BUTTON_DPAD_UP) {
+          if (gamepad.Buttons & XGAMEINPUT_BUTTON_DPAD_UP) {
               // The button is pressed
           }
       }
@@ -118,11 +118,11 @@ XGameInputSetLED(i, &rgb);
 <summary>Gamepad battery</summary>
 
 ```cpp
-XGAMEINPUT_BATTERY_INFORMATION batteryInfo{};
-DWORD result = XGameInputGetState(i, &batteryInfo);
+XGAMEINPUT_BATTERY_INFORMATION battery{};
+DWORD result = XGameInputGetState(i, &battery);
 if(result == ERROR_SUCCESS && 
-   batteryInfo.BatteryLevel >= 0 ) {
-    printf("Battery: %d%%\n", batteryInfo.BatteryLevel);
+   battery.Percent >= 0 ) {
+    printf("Battery: %d%%\n", battery.Percent);
 }
 ```
 
@@ -174,7 +174,18 @@ If you would like to receive gamepad updates while the application is in the bac
 
 # Build
 
-// TODO: Write me
+🆚 **Visual Studio 2026**
+
+📦 Vendor dependencies:
+  - [Microsoft Detours library](https://github.com/microsoft/Detours)
+  - [SDL3 Library](https://github.com/libsdl-org/SDL) recompiled as a static lib.
+
+Solution: `./vc/XGameInput.sln`
+
+The project inside the solution control the build output:
+  - XGameInput -> `XGameInput.dll`
+  
+Output: `./build/${project}/output/${platform}/${config}`
 
 # Github Action
 
