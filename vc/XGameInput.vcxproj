@@ -22,6 +22,7 @@
     <ResourceCompile Include="..\src\XGameInput.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\detours.cpp" />
     <ClCompile Include="..\src\dllmain.cpp" />
     <ClCompile Include="..\src\InputFusion.cpp" />
     <ClCompile Include="..\src\XGameInput\XGameInput.cpp" />
@@ -30,6 +31,7 @@
     <None Include="..\src\XGameInput\XGameInput.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\detours.h" />
     <ClInclude Include="..\src\dllmain.h" />
     <ClInclude Include="..\src\InputFusion.h" />
     <ClInclude Include="..\src\resource.h" />
