@@ -14,6 +14,7 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 #include "dllmain.h"
 #include <SDL3/SDL.h>
 #include "InputFusion.h"
+#include "detours.h"
 
 extern HANDLE InputFusion_SDL_Init_Wait;
 extern HANDLE InputFusion_SDL_Quit_Wait;
@@ -21,6 +22,7 @@ extern HANDLE InputFusion_SDL_Quit_Wait;
 DWORD WINAPI InputFusion_Main(LPVOID lpReserved) {
     SDL_SetLogPriorities(SDL_LOG_PRIORITY_ERROR);
     InputFusion_SDL_SetHints();
+    InputFusion_Detours_SetHooks();
     if (InputFusion_SDL_Init()) {
         InputFusion_SDL_EventLoop();
         InputFusion_SDL_CloseGamepads();
