@@ -62,11 +62,11 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 #define XGAMEINPUT_HAS_TRIGGER_RUMBLE             (1u << 2)
 #define XGAMEINPUT_HAS_LED                        (1u << 3)
 #define XGAMEINPUT_HAS_PLAYER_LED                 (1u << 5)
-#define XGAMEINPUT_HAS_TOUCHPAD                   (1u << 5)
-#define XGAMEINPUT_HAS_ACCEL                      (1u << 6)
-#define XGAMEINPUT_HAS_GYRO                       (1u << 7)
-#define XGAMEINPUT_HAS_CAPSENSE_STICK             (1u << 8)     // Capacitive sensor: activated by touching the top of an analog stick
-#define XGAMEINPUT_HAS_CAPSENSE_GRIP              (1u << 9)     // Capacitive sensor: activated by gripping the handle of the controller (e.g. Steam controller Grip sense)
+#define XGAMEINPUT_HAS_TOUCHPAD                   (1u << 6)
+#define XGAMEINPUT_HAS_ACCEL                      (1u << 7)
+#define XGAMEINPUT_HAS_GYRO                       (1u << 8)
+#define XGAMEINPUT_HAS_CAPSENSE_STICK             (1u << 9)     // Capacitive sensor: activated by touching the top of an analog stick
+#define XGAMEINPUT_HAS_CAPSENSE_GRIP              (1u << 10)     // Capacitive sensor: activated by gripping the handle of the controller (e.g. Steam controller Grip sense)
 
 typedef enum _XGAMEINPUT_GAMEPAD_TYPE
 {
