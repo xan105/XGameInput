@@ -27,7 +27,7 @@ namespace {
     void WINAPI InputFusion_ExitProcess(UINT uExitCode) {
         InputFusion_SDL_Event_Loop = false;
         if (InputFusion_SDL_Quit_Wait) {
-            WaitForSingleObject(InputFusion_SDL_Quit_Wait, INFINITE);
+            WaitForSingleObject(InputFusion_SDL_Quit_Wait, 1000);
             CloseHandle(InputFusion_SDL_Quit_Wait);
             InputFusion_SDL_Quit_Wait = nullptr;
         }
