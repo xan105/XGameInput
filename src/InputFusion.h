@@ -7,7 +7,10 @@ This file is based upon the original source code of
 [InputFusion](https://github.com/xan105/InputFusion)
 distributed under the GNU LESSER GENERAL PUBLIC LICENSE Version 3.
 
-Original source: https://github.com/xan105/InputFusion.git
+XGameInput source: https://github.com/xan105/XGameInput.git
+Mirror: https://download.xan105.com/XGameInput/Source%20code.zip
+
+InputFusion source: https://github.com/xan105/InputFusion.git
 Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 */
 
