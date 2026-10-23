@@ -41,7 +41,11 @@ jobs:
       - name: Generate Rust bindings
         shell: pwsh
         run: |
-          bindgen src/XGameInput/XGameInput.h --output bindings.rs
+          bindgen src/XGameInput/XGameInput.h `
+            --output bindings.rs `
+            --allowlist-function "XGameInput.*" `
+            --allowlist-type "XGAMEINPUT_.*" `
+            --allowlist-var "XGAMEINPUT_.*"
 
       - name: Upload generated bindings
         uses: actions/upload-artifact@v4
