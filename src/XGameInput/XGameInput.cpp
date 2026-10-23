@@ -399,34 +399,26 @@ extern "C" {
         }
       }
 
-      uint8_t left[DS5_TRIGGER_EFFECT_SIZE] = { 0 };
-      uint8_t right[DS5_TRIGGER_EFFECT_SIZE] = { 0 };
+      uint8_t effect[DS5_TRIGGER_EFFECT_SIZE] = { 0 };
       switch (mode) {
         case XGAMEINPUT_TRIGGER_EFFECT_MODE_OFF: {
-            memcpy(left, dualsense::DS5_TRIGGER_EFFECT_OFF, DS5_TRIGGER_EFFECT_SIZE);
-            memcpy(right, dualsense::DS5_TRIGGER_EFFECT_OFF, DS5_TRIGGER_EFFECT_SIZE);
+            memcpy(effect, dualsense::DS5_TRIGGER_EFFECT_OFF, DS5_TRIGGER_EFFECT_SIZE);
             break;
         }
         case XGAMEINPUT_TRIGGER_EFFECT_MODE_FEEDBACK: {
-            if (!dualsense::CreateFeedbackEffect(left, pEffectParam->position, pEffectParam->strength) || 
-                !dualsense::CreateFeedbackEffect(right, pEffectParam->position, pEffectParam->strength)
-            ) {
-                return ERROR_INVALID_PARAMETER;
+            if (!dualsense::CreateFeedbackEffect(effect, pEffectParam->position, pEffectParam->strength)) {
+              return ERROR_INVALID_PARAMETER;
             }
             break;
         }
         case XGAMEINPUT_TRIGGER_EFFECT_MODE_WEAPON: {
-            if (!dualsense::CreateWeaponEffect(left, pEffectParam->start, pEffectParam->end, pEffectParam->strength) || 
-                !dualsense::CreateWeaponEffect(right, pEffectParam->start, pEffectParam->end, pEffectParam->strength)
-            ) {
+            if (!dualsense::CreateWeaponEffect(effect, pEffectParam->start, pEffectParam->end, pEffectParam->strength)) {
                 return ERROR_INVALID_PARAMETER;
             }
           break;
         }
         case XGAMEINPUT_TRIGGER_EFFECT_MODE_VIBRATION: {
-            if (!dualsense::CreateVibrationEffect(left, pEffectParam->position, pEffectParam->amplitude, pEffectParam->frequency) || 
-                !dualsense::CreateVibrationEffect(right, pEffectParam->position, pEffectParam->amplitude, pEffectParam->frequency)
-            ) {
+            if (!dualsense::CreateVibrationEffect(effect, pEffectParam->position, pEffectParam->amplitude, pEffectParam->frequency)){
                 return ERROR_INVALID_PARAMETER;
             }
             break;
@@ -443,7 +435,7 @@ extern "C" {
         return ERROR_DEVICE_NOT_CONNECTED;
       }
       
-      dualsense::SetTriggerEffect(gamepad, trigger_mask, left, right);
+      dualsense::SetTriggerEffect(gamepad, trigger_mask, effect);
       
       return ERROR_SUCCESS;
     }

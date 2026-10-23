@@ -7,7 +7,7 @@ The following ressources were used as reference:
 
 - SDL3 Example showcasing how to send an effet to a DS5
   https://github.com/libsdl-org/SDL/blob/120c76c84bbce4c1bfed4e9eb74e10678bd83120/test/testgamecontroller.c#L286-L307
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org> | zlib License
 
 - Thanks to @Nielk1 for the factory functions
   https://gist.github.com/Nielk1/6d54cc2c00d2201ccb8c2720ad7538db
@@ -23,19 +23,12 @@ NB: This code is at the moment still untested on real hardware as I unforunately
 
 namespace dualsense {
 
-    bool SetTriggerEffect(SDL_Gamepad *gamepad, uint8_t trigger_mask, const uint8_t left[11], const uint8_t right[11]){
-        if (gamepad == nullptr) {
+    bool SetTriggerEffect(SDL_Gamepad *gamepad, uint8_t trigger_mask, const uint8_t effect[11]){
+        if (gamepad == nullptr || effect == nullptr) {
             return false;
         }
 
-        trigger_mask &= DS5_TRIGGER_EFFECT_BOTH;
-        if (trigger_mask == 0) {
-            return false;
-        }
-        if ((trigger_mask & DS5_TRIGGER_EFFECT_LEFT) && left == nullptr) {
-            return false;
-        }
-        if ((trigger_mask & DS5_TRIGGER_EFFECT_RIGHT) && right == nullptr) {
+        if (trigger_mask == 0 || (trigger_mask & ~DS5_TRIGGER_EFFECT_BOTH) != 0) {
             return false;
         }
         
@@ -44,11 +37,11 @@ namespace dualsense {
         effects.ucEnableBits1 = trigger_mask;
             
         if (trigger_mask & DS5_TRIGGER_EFFECT_LEFT) {
-            memcpy(effects.rgucLeftTriggerEffect, left, 11);
+            memcpy(effects.rgucLeftTriggerEffect, effect, 11);
         }
             
         if (trigger_mask & DS5_TRIGGER_EFFECT_RIGHT) {
-            memcpy(effects.rgucRightTriggerEffect, right, 11);
+            memcpy(effects.rgucRightTriggerEffect, effect, 11);
         }
 
         return SDL_SendGamepadEffect(gamepad, &effects, sizeof(effects));

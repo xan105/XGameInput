@@ -70,7 +70,7 @@ namespace dualsense {
         DS5_TRIGGER_EFFECT_MODE_OFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     };
 
-    bool SetTriggerEffect(SDL_Gamepad* gamepad, uint8_t trigger_mask, const uint8_t left[11], const uint8_t right[11]);
+    bool SetTriggerEffect(SDL_Gamepad* gamepad, uint8_t trigger_mask, const uint8_t effect[11]);
     bool CreateFeedbackEffect(uint8_t buffer[DS5_TRIGGER_EFFECT_SIZE], uint8_t position, uint8_t strength);
     bool CreateWeaponEffect(uint8_t buffer[DS5_TRIGGER_EFFECT_SIZE], uint8_t start_position, uint8_t end_position, uint8_t strength);
     bool CreateVibrationEffect(uint8_t buffer[DS5_TRIGGER_EFFECT_SIZE], uint8_t position, uint8_t amplitude, uint8_t frequency);
