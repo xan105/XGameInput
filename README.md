@@ -23,6 +23,7 @@ This is the _"XInput2_0.dll"_ Microsoft never gave us.
   - **New APIs:**
     + `XGameInputSetTriggerEffect()`: (Dualsense) Send a trigger effect to the specified trigger on the specified controller.
     + `XGameInputGetTouchpadState()`: Retrieves the state of fingers on a touchpad.
+    + `XGameInputGetMotionSensors()`: Retrieves the controller's accelerometer and gyroscope data.
     + `XGameInputSetLED()`: Updates the gamepad's LED.
     + `XGameInputGetSteamHandle()`: Returns a Steam's [InputHandle_t](https://partner.steamgames.com/doc/api/ISteamInput#InputHandle_t) for better integration with the Steam Input API
 
@@ -159,6 +160,56 @@ XGameInputSetTriggerEffect(
 
 </details>
 
+</details>
+
+<details>
+<summary>Gamepad TouchPad</summary>
+
+```cpp
+XGAMEINPUT_TOUCHPAD_STATE state = {};
+DWORD result = XGameInputGetTouchpadState(0, 0, &state);
+if (result == ERROR_SUCCESS) {
+    for (WORD i = 0; i < state.FingerCount; ++i)
+    {
+        const XGAMEINPUT_TOUCHPAD_FINGER& finger = state.Fingers[i];
+        if (finger.Down)
+        {
+            printf(
+                "Finger %u: X=%.3f, Y=%.3f, Pressure=%.3f\n",
+                i,
+                finger.X,
+                finger.Y,
+                finger.Pressure
+            );
+        }
+    }
+}
+```
+</details>
+
+<details>
+<summary>Motion Sensor (accel and gyro data)</summary>
+
+```cpp
+DWORD playerIndex = 0;
+XGAMEINPUT_MOTION_SENSORS sensors{};
+
+if (XGameInputGetMotionSensors(playerIndex, &sensors) == ERROR_SUCCESS)
+{
+  std::cout << "Accelerometer: "
+            << sensors.Accel[0] << ", "   // X
+            << sensors.Accel[1] << ", "   // Y
+            << sensors.Accel[2] << '\n';  // Z
+
+  std::cout << "Gyroscope: "
+            << sensors.Gyro[0] << ", "    // X
+            << sensors.Gyro[1] << ", "    // Y
+            << sensors.Gyro[2] << '\n';   // Z
+}
+```
+
+</details>
+
 <details>
 <summary>Update a gamepad's LED color</summary>
 
@@ -187,33 +238,6 @@ if(result == ERROR_SUCCESS &&
     printf("Battery: %d%%\n", battery.Percent);
 }
 ```
-
-</details>
-
-<details>
-<summary>Gamepad TouchPad</summary>
-
-```cpp
-XGAMEINPUT_TOUCHPAD_STATE state = {};
-DWORD result = XGameInputGetTouchpadState(0, 0, &state);
-if (result == ERROR_SUCCESS) {
-    for (WORD i = 0; i < state.FingerCount; ++i)
-    {
-        const XGAMEINPUT_TOUCHPAD_FINGER& finger = state.Fingers[i];
-        if (finger.Down)
-        {
-            printf(
-                "Finger %u: X=%.3f, Y=%.3f, Pressure=%.3f\n",
-                i,
-                finger.X,
-                finger.Y,
-                finger.Pressure
-            );
-        }
-    }
-}
-```
-</details>
 
 # Bindings
 
