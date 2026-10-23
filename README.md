@@ -251,8 +251,35 @@ The build generates:
 
 The public header supports both `C` and `C++`.
 
-# Github Action
+## Github Action
 
 `./.github/workflows/vs-build-on-windows.yaml`
 
 Build all targets (debug and release) and create a release.
+
+Licensing FAQ
+=============
+
+- **Why LGPL-3.0?**
+
+The LGPL allows XGameInput to be used in proprietary software while ensuring that improvements to the library remain available under the same license.
+
+- **Can I use XGameInput commercially?**
+
+Yes! Commercial use is permitted, including in proprietary applications. XGameInput is provided as a shared library, so your application does not need to be open-source just because it uses XGameInput.
+
+- **Can I modify the source code?**
+
+Yes! You can modify XGameInput to suit your needs. However, if you distribute your modified version, you must provide the corresponding source code under the LGPL-3.0.
+
+- **Do I have to open-source my project?**
+
+No! Using XGameInput does not mean you have to publish your application's source code. You can keep your project proprietary.
+
+- **Are there any fees or royalties?**
+
+No! XGameInput is free to use, including commercially.
+
+- **Need more details?**
+
+This FAQ covers common use cases in plain English. For the full terms and conditions, including requirements that may apply when distributing XGameInput or software that uses it, please refer to the LGPL-3.0 license included with this project.
