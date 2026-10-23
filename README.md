@@ -164,12 +164,12 @@ XGameInputSetTriggerEffect(
 <summary>Gamepad TouchPad</summary>
 
 ```cpp
-XGAMEINPUT_TOUCHPAD state = {};
-DWORD result = XGameInputGetTouchpad(0, 0, &state);
+XGAMEINPUT_TOUCHPAD touchpad = {};
+DWORD result = XGameInputGetTouchpad(0, 0, &touchpad);
 if (result == ERROR_SUCCESS) {
-    for (WORD i = 0; i < state.FingerCount; ++i)
+    for (WORD i = 0; i < touchpad.FingerCount; ++i)
     {
-        const XGAMEINPUT_TOUCHPAD_FINGER& finger = state.Fingers[i];
+        const XGAMEINPUT_TOUCHPAD_FINGER& finger = touchpad.Fingers[i];
         if (finger.Down)
         {
             printf(
@@ -230,7 +230,7 @@ XGameInputSetLED(i, &rgb);
 
 ```cpp
 XGAMEINPUT_BATTERY_INFORMATION battery{};
-DWORD result = XGameInputGetState(i, &battery);
+DWORD result = XGameInputGetBatteryInfo(i, &battery);
 if(result == ERROR_SUCCESS && 
    battery.Percent >= 0 ) {
     printf("Battery: %d%%\n", battery.Percent);
