@@ -69,9 +69,9 @@ jobs:
           Copy-Item ".\build\XGameInput\output\x64\Release\XGameInput.lib" "$tmp\XGameInput\x64\XGameInput.lib" -Force
           Copy-Item ".\src\XGameInput\XGameInput.h" "$tmp\XGameInput\x64\XGameInput.h" -Force
           
-          Copy-Item ".\build\XGameInput\output\Win32\Release\XGameInput.dll" "$tmp\InputFusion\x86\XGameInput.dll" -Force
-          Copy-Item ".\build\XGameInput\output\Win32\Release\XGameInput.lib" "$tmp\InputFusion\x86\XGameInput.lib" -Force
-          Copy-Item ".\src\XGameInput\XGameInput.h" "$tmp\InputFusion\x86\XGameInput.h" -Force
+          Copy-Item ".\build\XGameInput\output\Win32\Release\XGameInput.dll" "$tmp\XGameInput\x86\XGameInput.dll" -Force
+          Copy-Item ".\build\XGameInput\output\Win32\Release\XGameInput.lib" "$tmp\XGameInput\x86\XGameInput.lib" -Force
+          Copy-Item ".\src\XGameInput\XGameInput.h" "$tmp\XGameInput\x86\XGameInput.h" -Force
 
           # Misc
           Copy-Item ".\README.md" $tmp -Force
