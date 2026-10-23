@@ -102,7 +102,7 @@ XGameInputSetState(i, &vibration);
 **Clear both triggers**
 
 ```cpp
-XGameInputSetTriggerEffect(
+XGameInputSetTriggerState(
     playerIndex,
     XGAMEINPUT_TRIGGER_BOTH,
     XGAMEINPUT_TRIGGER_EFFECT_MODE_OFF,
@@ -119,7 +119,7 @@ vibration.position  = 2;
 vibration.amplitude = 6;
 vibration.frequency = 30;
 
-XGameInputSetTriggerEffect(
+XGameInputSetTriggerState(
   playerIndex,
   XGAMEINPUT_TRIGGER_BOTH,
   XGAMEINPUT_TRIGGER_EFFECT_MODE_VIBRATION,
@@ -136,7 +136,7 @@ weapon.start    = 2;
 weapon.end      = 6;
 weapon.strength = 7;
 
-XGameInputSetTriggerEffect(
+XGameInputSetTriggerState(
   playerIndex,
   XGAMEINPUT_TRIGGER_RIGHT,
   XGAMEINPUT_TRIGGER_EFFECT_MODE_WEAPON,
@@ -148,7 +148,7 @@ XGAMEINPUT_TRIGGER_EFFECT_PARAM feedback = {};
 feedback.position = 3;
 feedback.strength = 5;
 
-XGameInputSetTriggerEffect(
+XGameInputSetTriggerState(
   playerIndex,
   XGAMEINPUT_TRIGGER_LEFT,
   XGAMEINPUT_TRIGGER_EFFECT_MODE_FEEDBACK,
