@@ -318,7 +318,7 @@ extern "C" {
         return ERROR_SUCCESS;
     }
 
-    DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad) {
+    DWORD WINAPI XGameInputGetTouchpad(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD* pTouchPad) {
 
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pTouchPad == nullptr) {
             return ERROR_INVALID_PARAMETER;
@@ -341,7 +341,7 @@ extern "C" {
             fingers = XGAMEINPUT_TOUCHPAD_MAX_FINGERS;
         }
 
-        ZeroMemory(pTouchPad, sizeof(XGAMEINPUT_TOUCHPAD_STATE));
+        ZeroMemory(pTouchPad, sizeof(XGAMEINPUT_TOUCHPAD));
         pTouchPad->FingerCount = 0;
 
         for (int finger=0; finger < fingers; finger++ ) 
@@ -364,6 +364,54 @@ extern "C" {
                 state->Y = 0.0f;
                 state->Pressure = 0.0f;
             }
+        }
+
+        return ERROR_SUCCESS;
+    }
+
+    DWORD WINAPI XGameInputGetMotionSensors(DWORD PlayerIndex, XGAMEINPUT_MOTION_SENSORS* pSensors) {
+
+        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pSensors == nullptr) {
+            return ERROR_INVALID_PARAMETER;
+        }
+
+        InputFusion_SDL_Wait_ready();
+
+        SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
+        if (gamepad == nullptr) {
+            return ERROR_DEVICE_NOT_CONNECTED;
+        }
+
+        ZeroMemory(pSensors, sizeof(XGAMEINPUT_MOTION_SENSORS));
+
+        SDL_UpdateGamepads();
+
+        struct Sensor {
+            SDL_SensorType type;
+            float* data;
+            float* rate;
+        };
+
+        std::vector<Sensor> sensors = {
+          { SDL_SENSOR_ACCEL,   pSensors->Accel,        &pSensors->AccelRate },
+          { SDL_SENSOR_ACCEL_L, pSensors->AccelLeft,    &pSensors->AccelLeftRate },
+          { SDL_SENSOR_ACCEL_R, pSensors->AccelRight,   &pSensors->AccelRightRate },
+          { SDL_SENSOR_GYRO,    pSensors->Gyro,         &pSensors->GyroRate },
+          { SDL_SENSOR_GYRO_L,  pSensors->GyroLeft,     &pSensors->GyroLeftRate },
+          { SDL_SENSOR_GYRO_R,  pSensors->GyroRight,    &pSensors->GyroRightRate },
+        };
+
+        for (const auto& sensor : sensors)
+        {
+            if (!SDL_GamepadHasSensor(gamepad, sensor.type)) continue;
+
+            // Sensors are disabled by default
+            if (!SDL_GamepadSensorEnabled(gamepad, sensor.type)) {
+                SDL_SetGamepadSensorEnabled(gamepad, sensor.type, true);
+            }
+
+            SDL_GetGamepadSensorData(gamepad, sensor.type, sensor.data, XGAMEINPUT_MOTION_SENSORS_AXIS);
+            *sensor.rate = SDL_GetGamepadSensorDataRate(gamepad, sensor.type);
         }
 
         return ERROR_SUCCESS;
@@ -436,6 +484,8 @@ extern "C" {
       }
       
       dualsense::SetTriggerEffect(gamepad, trigger_mask, effect);
+      
+      SDL_UpdateGamepads();
       
       return ERROR_SUCCESS;
     }

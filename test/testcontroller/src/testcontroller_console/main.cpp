@@ -254,9 +254,9 @@ namespace
 
     bool IsTouchpadFingerDown(DWORD playerIndex)
     {
-        XGAMEINPUT_TOUCHPAD_STATE touchpad{};
+        XGAMEINPUT_TOUCHPAD touchpad{};
 
-        if (XGameInputGetTouchpadState(playerIndex, 0, &touchpad)
+        if (XGameInputGetTouchpad(playerIndex, 0, &touchpad)
             != ERROR_SUCCESS)
         {
             return false;
@@ -277,10 +277,10 @@ namespace
 
     void PrintTouchpadState(DWORD playerIndex)
     {
-        XGAMEINPUT_TOUCHPAD_STATE touchpad{};
+        XGAMEINPUT_TOUCHPAD touchpad{};
 
         const DWORD result =
-            XGameInputGetTouchpadState(playerIndex, 0, &touchpad);
+            XGameInputGetTouchpad(playerIndex, 0, &touchpad);
 
         if (result != ERROR_SUCCESS)
         {
@@ -316,6 +316,31 @@ namespace
 
         std::cout << "\033[K" << std::flush;
     }
+
+    void PrintMotionSensors(DWORD playerIndex)
+    {
+        XGAMEINPUT_MOTION_SENSORS sensors{};
+
+        const DWORD result =
+            XGameInputGetMotionSensors(playerIndex, &sensors);
+
+        if (result != ERROR_SUCCESS)
+        {
+            std::cout << "\rMotion sensors: unavailable\033[K" << std::flush;
+            return;
+        }
+
+        std::cout << "\rAccel: X:" << std::fixed << std::setprecision(3)
+            << std::setw(8) << sensors.Accel[0]
+            << " Y:" << std::setw(8) << sensors.Accel[1]
+            << " Z:" << std::setw(8) << sensors.Accel[2]
+            << " Rate:" << std::setw(7) << sensors.AccelRate
+            << " | Gyro: X:" << std::setw(8) << sensors.Gyro[0]
+            << " Y:" << std::setw(8) << sensors.Gyro[1]
+            << " Z:" << std::setw(8) << sensors.Gyro[2]
+            << " Rate:" << std::setw(7) << sensors.GyroRate
+            << "\033[K" << std::flush;
+    }
 }
 
 int main()
@@ -330,9 +355,11 @@ int main()
               << "Press START Button to display Controller capabilities.\n"
               << "Press SELECT Button to display Battery information.\n"
               << "Use the TouchPad to switch to TouchPad reading.\n"
+              << "Press the left stick to toggle motion sensor reading.\n"
               << "Press CTRL+C to disconnect, and again to exit\n\n";
 
     bool connected = false;
+    bool motionMode = false;
     DWORD previousButtons = 0;
 
     while (true)
@@ -341,7 +368,13 @@ int main()
         const DWORD result = XGameInputGetState(ControllerIndex, &gamepad);
         if (result == ERROR_SUCCESS)
         {
-            
+            if (!connected)
+            {
+                connected = true;
+                previousButtons = 0;
+                std::cout << "\n[INFO] Device connected\n";
+            }
+
             // Exit
             if (gamepad.Buttons & XGAMEINPUT_BUTTON_GUIDE)
             {
@@ -365,12 +398,15 @@ int main()
                 PrintBatteryInfo(ControllerIndex);
             }
 
-            if (!connected)
+            // Toggle motion sensor display when the left stick button is pressed.
+            const bool leftStickPressed = (gamepad.Buttons & XGAMEINPUT_BUTTON_LEFT_STICK) != 0;
+            const bool leftStickWasPressed = (previousButtons & XGAMEINPUT_BUTTON_LEFT_STICK) != 0;
+            if (leftStickPressed && !leftStickWasPressed)
             {
-                connected = true;
-                previousButtons = 0;
-
-                std::cout << "\n[INFO] Device connected\n";
+                motionMode = !motionMode;
+                std::cout << "\n[INFO] Display mode: "
+                    << (motionMode ? "Motion sensors" : "Gamepad state")
+                    << '\n';
             }
 
             LogButtonChanges(previousButtons, gamepad.Buttons);
@@ -378,6 +414,10 @@ int main()
             if (IsTouchpadFingerDown(ControllerIndex))
             {
                 PrintTouchpadState(ControllerIndex);
+            }
+            else if (motionMode)
+            {
+                PrintMotionSensors(ControllerIndex);
             }
             else
             {

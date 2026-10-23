@@ -19,6 +19,12 @@
     <Filter Include="Header Files\XGameInput">
       <UniqueIdentifier>{ba8794e4-7298-4edc-a0fe-2cdc01f0ab29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Gamepad">
+      <UniqueIdentifier>{4256c8d3-7402-4a4a-be17-d22de7f2343f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Gamepad">
+      <UniqueIdentifier>{800b70f6-7e78-4f68-b9e7-966be9c445d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\XGameInput.rc">
@@ -37,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="..\src\detours.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Gamepad\dualsense.cpp">
+      <Filter>Source Files\Gamepad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="..\src\detours.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Gamepad\dualsense.h">
+      <Filter>Header Files\Gamepad</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

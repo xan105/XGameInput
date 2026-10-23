@@ -20,6 +20,7 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 
 #define XGAMEINPUT_PLAYER_MAX                      8            // Maximum number of supported controllers.
 #define XGAMEINPUT_TOUCHPAD_MAX_FINGERS            5            // Maximum supported simultaneous fingers on a touchpad.
+#define XGAMEINPUT_MOTION_SENSORS_AXIS             3            // X,Y,Z
 
 #define XGAMEINPUT_GAMEPAD_AXIS_MAX                32767        // The largest value an axis can report.
 #define XGAMEINPUT_GAMEPAD_AXIS_MIN                -32768       // The smallest value an axis can report.
@@ -144,11 +145,27 @@ typedef struct _XGAMEINPUT_TOUCHPAD_FINGER                      // Represents th
     float Pressure;                                             // Pressure value.
 } XGAMEINPUT_TOUCHPAD_FINGER, *PXGAMEINPUT_TOUCHPAD_FINGER;
 
-typedef struct _XGAMEINPUT_TOUCHPAD_STATE                                 // Represents the current state of a touchpad.
+typedef struct _XGAMEINPUT_TOUCHPAD                             // Represents the current state of a touchpad.
 {
     WORD                        FingerCount;                              // The count represents the number of successfully queried finger slots, not the number of fingers currently touching the pad. Each slot's `Down` field tells you whether that finger is touching it.
     XGAMEINPUT_TOUCHPAD_FINGER  Fingers[XGAMEINPUT_TOUCHPAD_MAX_FINGERS]; // Contains the current state of fingers of a touchpad.
-} XGAMEINPUT_TOUCHPAD_STATE, *PXGAMEINPUT_TOUCHPAD_STATE;
+} XGAMEINPUT_TOUCHPAD, *PXGAMEINPUT_TOUCHPAD;
+
+typedef struct _XGAMEINPUT_MOTION_SENSORS
+{
+  float Accel[XGAMEINPUT_MOTION_SENSORS_AXIS];                  // Accelerometer (X,Y,Z).
+  float AccelRate;                                              // Accelerometer data rate (number of events per second).
+  float AccelLeft[XGAMEINPUT_MOTION_SENSORS_AXIS];              // Accelerometer for left Joy-Con controller and Wii nunchuk (X,Y,Z).
+  float AccelLeftRate;                                          // Accelerometer for left Joy-Con controller and Wii nunchuk data rate (number of events per second).
+  float AccelRight[XGAMEINPUT_MOTION_SENSORS_AXIS];             // Accelerometer for right Joy-Con controller (X,Y,Z).
+  float AccelRightRate;                                         // Accelerometer for right Joy-Con controller data rate (number of events per second).
+  float Gyro[XGAMEINPUT_MOTION_SENSORS_AXIS];                   // Gyroscope (X,Y,Z).
+  float GyroRate;                                               // Gyroscope data rate (number of events per second).
+  float GyroLeft[XGAMEINPUT_MOTION_SENSORS_AXIS];               // Gyroscope for left Joy-Con controller (X,Y,Z).
+  float GyroLeftRate;                                           // Gyroscope for left Joy-Con controller data rate (number of events per second).
+  float GyroRight[XGAMEINPUT_MOTION_SENSORS_AXIS];              // Gyroscope for right Joy-Con controller (X,Y,Z).
+  float GyroRightRate;                                          // Gyroscope for right Joy-Con controller data rate (number of events per second).
+} XGAMEINPUT_MOTION_SENSORS, *PXGAMEINPUT_MOTION_SENSORS;
 
 // Dualsense (DS5)
 typedef enum _XGAMEINPUT_TRIGGER_EFFECT {
@@ -167,10 +184,10 @@ typedef enum _XGAMEINPUT_TRIGGER_EFFECT_MODE{                   // Offically rec
 typedef struct _XGAMEINPUT_TRIGGER_EFFECT_PARAM {
   BYTE position;	                                            // Zone (position)	[0~9]: The trigger travel split into 10 zones. 0 is released, 9 is fully pressed. 
   BYTE strength;	                                            // Resistance force [0~8]: 1 is barely there, 8 is the strongest the motor can push. 0 is same as Off mode.
-  BYTE amplitude;                                            // Amplitude	[0~8]: Vibration intensity. 0 is same as Off mode.
-  BYTE frequency;                                            // Frequency	[0~255]: Vibration frequency in Hz. 0 is same as Off mode.
-  BYTE start;                                                // Position [2~7] where the stiffness of trigger start changing.
-  BYTE end;                                                  // Position [start+1~8] where the stiffness of trigger finish changing
+  BYTE amplitude;                                               // Amplitude	[0~8]: Vibration intensity. 0 is same as Off mode.
+  BYTE frequency;                                               // Frequency	[0~255]: Vibration frequency in Hz. 0 is same as Off mode.
+  BYTE start;                                                   // Position [2~7] where the stiffness of trigger start changing.
+  BYTE end;                                                     // Position [start+1~8] where the stiffness of trigger finish changing
 } XGAMEINPUT_TRIGGER_EFFECT_PARAM;
 
 // Common
@@ -182,7 +199,8 @@ typedef DWORD(WINAPI* XGameInputGetBatteryInfo_t)(DWORD PlayerIndex, XGAMEINPUT_
 typedef DWORD(WINAPI* XGameInputGetSteamHandle_t)(DWORD PlayerIndex, UINT64* pInputHandle);
 // Hardware specific
 typedef DWORD(WINAPI* XGameInputSetLED_t)(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);
-typedef DWORD(WINAPI* XGameInputGetTouchpadState_t)(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad);
+typedef DWORD(WINAPI* XGameInputGetTouchpad_t)(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD* pTouchPad);
+typedef DWORD(WINAPI* XGameInputGetMotionSensors_t)(DWORD PlayerIndex, XGAMEINPUT_MOTION_SENSORS* pSensors);
 typedef DWORD(WINAPI* XGameInputSetTriggerEffect_t)(
     DWORD PlayerIndex,
     XGAMEINPUT_TRIGGER_EFFECT trigger,
@@ -203,7 +221,8 @@ extern "C" {
     
     // Hardware specific
     DWORD WINAPI XGameInputSetLED(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);                                       // Update the specified controller's LED color.
-    DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad);       // Retrieves the current state of the specified touchpad of the specified controller.
+    DWORD WINAPI XGameInputGetTouchpad(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD* pTouchPad);                  // Retrieves the current state of the specified touchpad of the specified controller.
+    DWORD WINAPI XGameInputGetMotionSensors(DWORD PlayerIndex, XGAMEINPUT_MOTION_SENSORS* pSensors);                            // Retrieves the current state of the motions sensors of the specified controller.
     DWORD WINAPI XGameInputSetTriggerEffect(
         DWORD PlayerIndex,
         XGAMEINPUT_TRIGGER_EFFECT trigger,
