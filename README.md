@@ -159,6 +159,68 @@ if (result == ERROR_SUCCESS) {
 
 </details>
 
+<details>
+<summary>Dualsense Haptic triggers</summary>
+
+**Clear both triggers**
+
+```
+XGameInputSetTriggerEffect(
+    playerIndex,
+    XGAMEINPUT_TRIGGER_BOTH,
+    XGAMEINPUT_TRIGGER_EFFECT_MODE_OFF,
+    NULL // No parameters are needed for OFF
+);
+```
+
+**Same effect to both triggers**
+
+```cpp
+// Vibration
+XGAMEINPUT_TRIGGER_EFFECT_PARAM vibration = {};
+vibration.position  = 2;
+vibration.amplitude = 6;
+vibration.frequency = 30;
+
+XGameInputSetTriggerEffect(
+  playerIndex,
+  XGAMEINPUT_TRIGGER_BOTH,
+  XGAMEINPUT_TRIGGER_EFFECT_MODE_VIBRATION,
+  &vibration
+);
+```
+
+**Different effects on each trigger**
+
+```cpp
+// Right trigger: a weapon-like resistance break.
+XGAMEINPUT_TRIGGER_EFFECT_PARAM weapon = {};
+weapon.start    = 2;
+weapon.end      = 6;
+weapon.strength = 7;
+
+XGameInputSetTriggerEffect(
+  playerIndex,
+  XGAMEINPUT_TRIGGER_RIGHT,
+  XGAMEINPUT_TRIGGER_EFFECT_MODE_WEAPON,
+  &weapon
+);
+
+// Left trigger: progressive feedback resistance.
+XGAMEINPUT_TRIGGER_EFFECT_PARAM feedback = {};
+feedback.position = 3;
+feedback.strength = 5;
+
+XGameInputSetTriggerEffect(
+  playerIndex,
+  XGAMEINPUT_TRIGGER_LEFT,
+  XGAMEINPUT_TRIGGER_EFFECT_MODE_FEEDBACK,
+  &feedback
+);
+```
+
+</details>
+
 # Bindings
 
 // TODO: Write me
@@ -183,6 +245,7 @@ If you would like to receive gamepad updates while the application is in the bac
   - [SDL3 Library](https://github.com/libsdl-org/SDL) recompiled as a static lib.
 
 **Solution**: `./vc/XGameInput.sln`
+
 **Output directory**: `./build/${project}/output/${platform}/${config}`
 
 The build generates:
