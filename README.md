@@ -18,14 +18,14 @@ This is the `XInput2_0.dll` Microsoft never gave us.
   
   - **More buttons:** Supports up to 32 buttons, including rear paddles, touchpad button, and other special buttons.
   
-  - **New APIs:**
-    + `XGameInputGetTouchpadState()`: Retrieves the state of fingers on a touchpad.
-    + `XGameInputSetTriggerState()`: (Dualsense) Send a trigger effect to the specified trigger on the specified controller.
-    + `XGameInputSetLED()`: Updates the gamepad's LED.
-    + `XGameInputGetSteamHandle()`: Returns a Steam's [InputHandle_t](https://partner.steamgames.com/doc/api/ISteamInput#InputHandle_t) for better integration with the Steam Input API
-  
   - **Trigger motor support:** `XGameInputSetState()` also supports trigger motors (e.g. Xbox's Impulse triggers).
   
+  - **New APIs:**
+    + `XGameInputSetTriggerState()`: (Dualsense) Send a trigger effect to the specified trigger on the specified controller.
+    + `XGameInputGetTouchpadState()`: Retrieves the state of fingers on a touchpad.
+    + `XGameInputSetLED()`: Updates the gamepad's LED.
+    + `XGameInputGetSteamHandle()`: Returns a Steam's [InputHandle_t](https://partner.steamgames.com/doc/api/ISteamInput#InputHandle_t) for better integration with the Steam Input API
+
   - **Expanded capabilities reporting:** `XGameInputGetCapabilities()` provides:
     + Gamepad type (PS4, PS5, Xbox 360, Steam Controller, etc.). 
     + Vendor and product IDs.
@@ -54,8 +54,6 @@ Looking at GameInput's design _(XInput supposed successor)_, I can't help but se
 If you are a game developer, you should probably use SDL3. But if you don't want to deal with SDL3's quirks and specifics, and just want a straightforward, XInput-style API that works with modern controllers, this project is for you.
 
 # Usage Example
-
-// TODO: Write me (still a wip)
 
 ```cpp
 #include <XGameInput.h>
@@ -91,71 +89,10 @@ XGAMEINPUT_VIBRATION vibration{};
 // use any value between 0-65535 here
 vibration.LeftMotorSpeed    = 32000; 
 vibration.RightMotorSpeed   = 16000;
-vibration.LeftTriggerSpeed  = 0; 
-vibration.RightTriggerSpeed = 0;
-
+vibration.LeftTriggerSpeed  = 0; // Xbox Impulse trigger
+vibration.RightTriggerSpeed = 0; // Xbox Impulse trigger
 XGameInputSetState(i, &vibration);
 ```
-
-</details>
-
-<details>
-<summary>Update a gamepad's LED color</summary>
-
-```cpp
-XGAMEINPUT_GAMEPAD_LED rgb{};
-rgb.Red   = 0;
-rgb.Green = 0;
-rgb.Blue  = 64;
-// For gamepads with a single color LED, 
-// the maximum of the RGB values will be used 
-// as the LED brightness.
-
-XGameInputSetLED(i, &rgb);
-```
-
-</details>
-
-<details>
-<summary>Gamepad battery</summary>
-
-```cpp
-XGAMEINPUT_BATTERY_INFORMATION battery{};
-DWORD result = XGameInputGetState(i, &battery);
-if(result == ERROR_SUCCESS && 
-   battery.Percent >= 0 ) {
-    printf("Battery: %d%%\n", battery.Percent);
-}
-```
-
-</details>
-
-<details>
-<summary>Gamepad TouchPad</summary>
-
-```cpp
-XGAMEINPUT_TOUCHPAD_STATE state = {};
-DWORD result = XGameInputGetTouchpadState(0, 0, &state);
-if (result == ERROR_SUCCESS) {
-    for (WORD i = 0; i < state.FingerCount; ++i)
-    {
-        const XGAMEINPUT_TOUCHPAD_FINGER& finger = state.Fingers[i];
-        if (finger.Down)
-        {
-            printf(
-                "Finger %u: X=%.3f, Y=%.3f, Pressure=%.3f\n",
-                i,
-                finger.X,
-                finger.Y,
-                finger.Pressure
-            );
-        }
-    }
-}
-```
-
-> [!IMPORTANT]
-> The count represents the number of successfully queried finger slots, not the number of fingers currently touching the pad. Each slot's Down field tells you whether that finger is touching it.
 
 </details>
 
@@ -164,7 +101,7 @@ if (result == ERROR_SUCCESS) {
 
 **Clear both triggers**
 
-```
+```cpp
 XGameInputSetTriggerEffect(
     playerIndex,
     XGAMEINPUT_TRIGGER_BOTH,
@@ -219,6 +156,62 @@ XGameInputSetTriggerEffect(
 );
 ```
 
+</details>
+
+<details>
+<summary>Update a gamepad's LED color</summary>
+
+```cpp
+XGAMEINPUT_GAMEPAD_LED rgb{};
+rgb.Red   = 0;
+rgb.Green = 0;
+rgb.Blue  = 64;
+XGameInputSetLED(i, &rgb);
+
+// For gamepads with a single color LED, 
+// the maximum of the RGB values will be used 
+// as the LED brightness.
+```
+
+</details>
+
+<details>
+<summary>Gamepad battery</summary>
+
+```cpp
+XGAMEINPUT_BATTERY_INFORMATION battery{};
+DWORD result = XGameInputGetState(i, &battery);
+if(result == ERROR_SUCCESS && 
+   battery.Percent >= 0 ) {
+    printf("Battery: %d%%\n", battery.Percent);
+}
+```
+
+</details>
+
+<details>
+<summary>Gamepad TouchPad</summary>
+
+```cpp
+XGAMEINPUT_TOUCHPAD_STATE state = {};
+DWORD result = XGameInputGetTouchpadState(0, 0, &state);
+if (result == ERROR_SUCCESS) {
+    for (WORD i = 0; i < state.FingerCount; ++i)
+    {
+        const XGAMEINPUT_TOUCHPAD_FINGER& finger = state.Fingers[i];
+        if (finger.Down)
+        {
+            printf(
+                "Finger %u: X=%.3f, Y=%.3f, Pressure=%.3f\n",
+                i,
+                finger.X,
+                finger.Y,
+                finger.Pressure
+            );
+        }
+    }
+}
+```
 </details>
 
 # Bindings
