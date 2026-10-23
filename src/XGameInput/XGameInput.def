@@ -3,8 +3,9 @@ EXPORTS
 DllMain                    @1
 XGameInputGetState         @2
 XGameInputSetState         @3
-XGameInputSetLED		   @4
+XGameInputGetCapabilities  @4
 XGameInputGetBatteryInfo   @5
-XGameInputGetCapabilities  @6
-XGameInputGetSteamHandle   @7
+XGameInputGetSteamHandle   @6
+XGameInputSetLED		       @7
 XGameInputGetTouchpadState @8
+XGameInputSetTriggerState  @9

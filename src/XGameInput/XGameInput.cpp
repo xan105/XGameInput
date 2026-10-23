@@ -16,6 +16,7 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 #include <unordered_map>
 #include <atomic>
 #include "../InputFusion.h"
+#include "../Gamepad/dualsense.h"
 
 namespace {
 
@@ -368,8 +369,82 @@ extern "C" {
         return ERROR_SUCCESS;
     }
 
-    /*XGameInputSetTriggerState() {
-        //dual sense sdl raw packet send ?
+    // NB: This code is at the moment still untested on real hardware as I unforunately do not yet own a DS5 controller.
+    DWORD WINAPI XGameInputSetTriggerState(DWORD PlayerIndex, XGAMEINPUT_TRIGGER_EFFECT trigger, XGAMEINPUT_TRIGGER_EFFECT_MODE mode, const XGAMEINPUT_TRIGGER_EFFECT_PARAM* pEffectParam) {
+      
+      if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX) {
+        return ERROR_INVALID_PARAMETER;
+      }
+      
+      if (mode != XGAMEINPUT_TRIGGER_EFFECT_MODE_OFF && pEffectParam == nullptr) {
+          return ERROR_INVALID_PARAMETER;
+      }
 
-    */
+      uint8_t trigger_mask = DS5_TRIGGER_EFFECT_BOTH;
+      switch (trigger) {
+        case XGAMEINPUT_TRIGGER_EFFECT_BOTH: {
+          trigger_mask = DS5_TRIGGER_EFFECT_BOTH;
+          break;
+        }
+        case XGAMEINPUT_TRIGGER_EFFECT_LEFT: {
+          trigger_mask = DS5_TRIGGER_EFFECT_LEFT;
+          break;
+        }
+        case XGAMEINPUT_TRIGGER_EFFECT_RIGHT: {
+          trigger_mask = DS5_TRIGGER_EFFECT_RIGHT;
+          break;
+        }
+        default: {
+          return ERROR_INVALID_PARAMETER;
+        }
+      }
+
+      uint8_t left[DS5_TRIGGER_EFFECT_SIZE] = { 0 };
+      uint8_t right[DS5_TRIGGER_EFFECT_SIZE] = { 0 };
+      switch (mode) {
+        case XGAMEINPUT_TRIGGER_EFFECT_MODE_OFF: {
+            memcpy(left, dualsense::DS5_TRIGGER_EFFECT_OFF, DS5_TRIGGER_EFFECT_SIZE);
+            memcpy(right, dualsense::DS5_TRIGGER_EFFECT_OFF, DS5_TRIGGER_EFFECT_SIZE);
+            break;
+        }
+        case XGAMEINPUT_TRIGGER_EFFECT_MODE_FEEDBACK: {
+            if (!dualsense::CreateFeedbackEffect(left, pEffectParam->position, pEffectParam->strength) || 
+                !dualsense::CreateFeedbackEffect(right, pEffectParam->position, pEffectParam->strength)
+            ) {
+                return ERROR_INVALID_PARAMETER;
+            }
+            break;
+        }
+        case XGAMEINPUT_TRIGGER_EFFECT_MODE_WEAPON: {
+            if (!dualsense::CreateWeaponEffect(left, pEffectParam->start, pEffectParam->end, pEffectParam->strength) || 
+                !dualsense::CreateWeaponEffect(right, pEffectParam->start, pEffectParam->end, pEffectParam->strength)
+            ) {
+                return ERROR_INVALID_PARAMETER;
+            }
+          break;
+        }
+        case XGAMEINPUT_TRIGGER_EFFECT_MODE_VIBRATION: {
+            if (!dualsense::CreateVibrationEffect(left, pEffectParam->position, pEffectParam->amplitude, pEffectParam->frequency) || 
+                !dualsense::CreateVibrationEffect(right, pEffectParam->position, pEffectParam->amplitude, pEffectParam->frequency)
+            ) {
+                return ERROR_INVALID_PARAMETER;
+            }
+            break;
+        }
+        default: {
+          return ERROR_INVALID_PARAMETER;
+        }
+      }
+      
+      InputFusion_SDL_Wait_ready();
+      
+      SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
+      if (gamepad == nullptr) {
+        return ERROR_DEVICE_NOT_CONNECTED;
+      }
+      
+      dualsense::SetTriggerEffect(gamepad, trigger_mask, left, right);
+      
+      return ERROR_SUCCESS;
+    }
 }

@@ -4,7 +4,7 @@
   <em><strong>X</strong>an <strong>G</strong>ame <strong>I</strong>nput</em>
 </p>
 
-What if Microsoft had never abandoned XInput? What if it supported more than just Xbox controllers, had support for modern features like touchpads, gyroscopes, accelerometers, and rear paddles?
+What if Microsoft had never abandoned XInput? What if it supported more than just Xbox controllers, had support for modern features like touchpads, gyroscopes, accelerometers, haptic triggers and rear paddles?
 
 This project is a modernization of the original XInput API. It aims to preserve its familiar feel and programming paradigm while simplifying the API, expanding controller support, and exposing modern controller features.
 
@@ -20,10 +20,11 @@ This is the `XInput2_0.dll` Microsoft never gave us.
   
   - **New APIs:**
     + `XGameInputGetTouchpadState()`: Retrieves the state of fingers on a touchpad.
+    + `XGameInputSetTriggerState()`: (Dualsense) Send a trigger effect to the specified trigger on the specified controller.
     + `XGameInputSetLED()`: Updates the gamepad's LED.
     + `XGameInputGetSteamHandle()`: Returns a Steam's [InputHandle_t](https://partner.steamgames.com/doc/api/ISteamInput#InputHandle_t) for better integration with the Steam Input API
   
-  - **Trigger motor support:** `XGameInputSetState()` also supports trigger motors.
+  - **Trigger motor support:** `XGameInputSetState()` also supports trigger motors (e.g. Xbox's Impulse triggers).
   
   - **Expanded capabilities reporting:** `XGameInputGetCapabilities()` provides:
     + Gamepad type (PS4, PS5, Xbox 360, Steam Controller, etc.). 
@@ -34,6 +35,7 @@ This is the `XInput2_0.dll` Microsoft never gave us.
   - **Simplified API:** Keeps the API focused with fewer, more straightforward functions:
     + Removed legacy and unsupported XInput APIs on modern versions of Windows.
     + Merged standard functions with their corresponding hidden `_Ex()` variants.
+    + `XGameInputGetState()` returns the gamepad state directly (button press, axis and trigger values).
        
   - **More connected controllers:** Increases the maximum number of supported controllers from `4` to `8`.
 
@@ -180,12 +182,17 @@ If you would like to receive gamepad updates while the application is in the bac
   - [Microsoft Detours library](https://github.com/microsoft/Detours)
   - [SDL3 Library](https://github.com/libsdl-org/SDL) recompiled as a static lib.
 
-Solution: `./vc/XGameInput.sln`
+**Solution**: `./vc/XGameInput.sln`
+**Output directory**: `./build/${project}/output/${platform}/${config}`
 
-The project inside the solution control the build output:
-  - XGameInput -> `XGameInput.dll`
-  
-Output: `./build/${project}/output/${platform}/${config}`
+The build generates:
+
+- `XGameInput.dll`: Dynamic-link library containing the implementation.
+- `XGameInput.lib`: Import library for linking applications against the DLL.
+
+**Public header**: `./src/XGameInput/XGameInput.h`
+
+The public header supports both `C` and `C++`.
 
 # Github Action
 

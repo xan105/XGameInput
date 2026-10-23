@@ -150,24 +150,66 @@ typedef struct _XGAMEINPUT_TOUCHPAD_STATE                                 // Rep
     XGAMEINPUT_TOUCHPAD_FINGER  Fingers[XGAMEINPUT_TOUCHPAD_MAX_FINGERS]; // Contains the current state of fingers of a touchpad.
 } XGAMEINPUT_TOUCHPAD_STATE, *PXGAMEINPUT_TOUCHPAD_STATE;
 
+// Dualsense (DS5)
+typedef enum _XGAMEINPUT_TRIGGER_EFFECT {
+  XGAMEINPUT_TRIGGER_EFFECT_BOTH = 0,
+  XGAMEINPUT_TRIGGER_EFFECT_LEFT,
+  XGAMEINPUT_TRIGGER_EFFECT_RIGHT,
+} XGAMEINPUT_TRIGGER_EFFECT;
+
+typedef enum _XGAMEINPUT_TRIGGER_EFFECT_MODE{                   // Offically recognized modes
+  XGAMEINPUT_TRIGGER_EFFECT_MODE_OFF = 0,     
+  XGAMEINPUT_TRIGGER_EFFECT_MODE_FEEDBACK,                      // Constant resistance from a zone to the end of the travel. The simplest "heavy trigger".
+  XGAMEINPUT_TRIGGER_EFFECT_MODE_WEAPON,                        // Resistance between two zones that gives way with a click, like a real gun trigger.
+  XGAMEINPUT_TRIGGER_EFFECT_MODE_VIBRATION                      // The trigger vibrates from a zone to the end of the travel.
+} XGAMEINPUT_TRIGGER_EFFECT_MODE;
+
+typedef struct _XGAMEINPUT_TRIGGER_EFFECT_PARAM {
+  BYTE position;	                                            // Zone (position)	[0~9]: The trigger travel split into 10 zones. 0 is released, 9 is fully pressed. 
+  BYTE strength;	                                            // Resistance force [0~8]: 1 is barely there, 8 is the strongest the motor can push. 0 is same as Off mode.
+  BYTE amplitude;                                            // Amplitude	[0~8]: Vibration intensity. 0 is same as Off mode.
+  BYTE frequency;                                            // Frequency	[0~255]: Vibration frequency in Hz. 0 is same as Off mode.
+  BYTE start;                                                // Position [2~7] where the stiffness of trigger start changing.
+  BYTE end;                                                  // Position [start+1~8] where the stiffness of trigger finish changing
+} XGAMEINPUT_TRIGGER_EFFECT_PARAM;
+
+// Common
 typedef DWORD(WINAPI* XGameInputGetState_t)(DWORD PlayerIndex, XGAMEINPUT_GAMEPAD* pGamepad);
 typedef DWORD(WINAPI* XGameInputSetState_t)(DWORD PlayerIndex, const XGAMEINPUT_VIBRATION* pVibration);
-typedef DWORD(WINAPI* XGameInputSetLED_t)(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);
-typedef DWORD(WINAPI* XGameInputGetBatteryInfo_t)(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);
 typedef DWORD(WINAPI* XGameInputGetCapabilities_t)(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities);
+typedef DWORD(WINAPI* XGameInputGetBatteryInfo_t)(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);
+// Steam Input
 typedef DWORD(WINAPI* XGameInputGetSteamHandle_t)(DWORD PlayerIndex, UINT64* pInputHandle);
+// Hardware specific
+typedef DWORD(WINAPI* XGameInputSetLED_t)(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);
 typedef DWORD(WINAPI* XGameInputGetTouchpadState_t)(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad);
+typedef DWORD(WINAPI* XGameInputSetTriggerState_t)(
+    DWORD PlayerIndex,
+    XGAMEINPUT_TRIGGER_EFFECT trigger,
+    XGAMEINPUT_TRIGGER_EFFECT_MODE mode,
+    const XGAMEINPUT_TRIGGER_EFFECT_PARAM* pEffectParam);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+    // Common
     DWORD WINAPI XGameInputGetState(DWORD PlayerIndex, XGAMEINPUT_GAMEPAD* pGamepad);                                           // Retrieves the current state of the specified controller.
     DWORD WINAPI XGameInputSetState(DWORD PlayerIndex, const XGAMEINPUT_VIBRATION* pVibration);                                 // Sends data to the specified controller. This function is used to activate vibration motors.
-    DWORD WINAPI XGameInputSetLED(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);                                       // Update the specified controller's LED color.
-    DWORD WINAPI XGameInputGetBatteryInfo(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);                     // Retrieves information on battery and charge state of the specified controller.
     DWORD WINAPI XGameInputGetCapabilities(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities);                          // Retrieves the capabilities and features of the specified controller.
+    DWORD WINAPI XGameInputGetBatteryInfo(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION *pBatteryInfo);                     // Retrieves information on battery and charge state of the specified controller.
+    
+    // Steam Input
     DWORD WINAPI XGameInputGetSteamHandle(DWORD PlayerIndex, UINT64* pInputHandle);                                             // Returns an `InputHandle_t` for the specified controller that can be used with the Steam Input API.
+    
+    // Hardware specific
+    DWORD WINAPI XGameInputSetLED(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);                                       // Update the specified controller's LED color.
     DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad);       // Retrieves the current state of the specified touchpad of the specified controller.
+    DWORD WINAPI XGameInputSetTriggerState(
+        DWORD PlayerIndex,
+        XGAMEINPUT_TRIGGER_EFFECT trigger,
+        XGAMEINPUT_TRIGGER_EFFECT_MODE mode,
+        const XGAMEINPUT_TRIGGER_EFFECT_PARAM* pEffectParam);                                                                   // Dualsense (DS5) only | Send a trigger effect to the specified trigger on the specified controller.   
+                                                                                                                                // pEffectParam can be null when mode is off.
 #ifdef __cplusplus
 }
 #endif
