@@ -243,7 +243,13 @@ if(result == ERROR_SUCCESS &&
 
 # Bindings
 
-// TODO: Write me
+Bindings for other languages:
+
+- [Go](./blob/main/bindings/Go/xgameinput_windows.go)
+- [Rust](./blob/main/bindings/Rust/xgameinput_windows.rs)
+
+> [!NOTE]
+> These bindings were machine-generated. I'll replace them with proper ones later. This should be enough to get things going for now.
 
 Caveats
 =======
