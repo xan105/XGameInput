@@ -151,7 +151,7 @@ typedef struct _XGAMEINPUT_TOUCHPAD                             // Represents th
     XGAMEINPUT_TOUCHPAD_FINGER  Fingers[XGAMEINPUT_TOUCHPAD_MAX_FINGERS]; // Contains the current state of fingers of a touchpad.
 } XGAMEINPUT_TOUCHPAD, *PXGAMEINPUT_TOUCHPAD;
 
-typedef struct _XGAMEINPUT_MOTION_SENSORS
+typedef struct _XGAMEINPUT_MOTION_SENSORS                       // Represents the current accelerometer and gyroscope data of the sensors.
 {
   float Accel[XGAMEINPUT_MOTION_SENSORS_AXIS];                  // Accelerometer (X,Y,Z).
   float AccelRate;                                              // Accelerometer data rate (number of events per second).
@@ -222,7 +222,7 @@ extern "C" {
     // Hardware specific
     DWORD WINAPI XGameInputSetLED(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);                                       // Update the specified controller's LED color.
     DWORD WINAPI XGameInputGetTouchpad(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD* pTouchPad);                  // Retrieves the current state of the specified touchpad of the specified controller.
-    DWORD WINAPI XGameInputGetMotionSensors(DWORD PlayerIndex, XGAMEINPUT_MOTION_SENSORS* pSensors);                            // Retrieves the current state of the motions sensors of the specified controller.
+    DWORD WINAPI XGameInputGetMotionSensors(DWORD PlayerIndex, XGAMEINPUT_MOTION_SENSORS* pSensors);                            // Retrieves the current state of the motions sensors (accelerometer and gyroscope data) of the specified controller.
     DWORD WINAPI XGameInputSetTriggerEffect(
         DWORD PlayerIndex,
         XGAMEINPUT_TRIGGER_EFFECT trigger,
