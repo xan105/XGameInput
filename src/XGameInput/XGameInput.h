@@ -62,12 +62,12 @@ Mirror: https://download.xan105.com/InputFusion/Source%20code.zip
 #define XGAMEINPUT_HAS_RUMBLE                     (1u << 1)     // The gamepad is equipped with vibration motors.
 #define XGAMEINPUT_HAS_TRIGGER_RUMBLE             (1u << 2)     // The gamepad is equipped with impulse triggers.
 #define XGAMEINPUT_HAS_LED                        (1u << 3)     // The gamepad is equipped with a programmable LED (e.g. the light on the back of a PlayStation 4's DualShock 4 controller).
-#define XGAMEINPUT_HAS_PLAYER_LED                 (1u << 5)     // The gamepad is equipped with a LED to indicate the player number.
-#define XGAMEINPUT_HAS_TOUCHPAD                   (1u << 6)     // The gamepad is equipped with one or more touchpad.
-#define XGAMEINPUT_HAS_ACCEL                      (1u << 7)     // The gamepad is equipped with one or more accelerometer.
-#define XGAMEINPUT_HAS_GYRO                       (1u << 8)     // The gamepad is equipped with one or more gyroscope.
-#define XGAMEINPUT_HAS_CAPSENSE_STICK             (1u << 9)     // The gamepad is equipped with one or more capacitive sensor activated by touching the top of an analog stick.
-#define XGAMEINPUT_HAS_CAPSENSE_GRIP              (1u << 10)    // The gamepad is equipped with one or more capacitive sensor activated by gripping the handle of the controller (e.g. Steam controller Grip sense).
+#define XGAMEINPUT_HAS_PLAYER_LED                 (1u << 4)     // The gamepad is equipped with a LED to indicate the player number.
+#define XGAMEINPUT_HAS_TOUCHPAD                   (1u << 5)     // The gamepad is equipped with one or more touchpad.
+#define XGAMEINPUT_HAS_ACCEL                      (1u << 6)     // The gamepad is equipped with one or more accelerometer.
+#define XGAMEINPUT_HAS_GYRO                       (1u << 7)     // The gamepad is equipped with one or more gyroscope.
+#define XGAMEINPUT_HAS_CAPSENSE_STICK             (1u << 8)     // The gamepad is equipped with one or more capacitive sensor activated by touching the top of an analog stick.
+#define XGAMEINPUT_HAS_CAPSENSE_GRIP              (1u << 9)     // The gamepad is equipped with one or more capacitive sensor activated by gripping the handle of the controller (e.g. Steam controller Grip sense).
 
 typedef enum _XGAMEINPUT_GAMEPAD_TYPE
 {
