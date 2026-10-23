@@ -183,7 +183,7 @@ typedef DWORD(WINAPI* XGameInputGetSteamHandle_t)(DWORD PlayerIndex, UINT64* pIn
 // Hardware specific
 typedef DWORD(WINAPI* XGameInputSetLED_t)(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);
 typedef DWORD(WINAPI* XGameInputGetTouchpadState_t)(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad);
-typedef DWORD(WINAPI* XGameInputSetTriggerState_t)(
+typedef DWORD(WINAPI* XGameInputSetTriggerEffect_t)(
     DWORD PlayerIndex,
     XGAMEINPUT_TRIGGER_EFFECT trigger,
     XGAMEINPUT_TRIGGER_EFFECT_MODE mode,
@@ -204,7 +204,7 @@ extern "C" {
     // Hardware specific
     DWORD WINAPI XGameInputSetLED(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);                                       // Update the specified controller's LED color.
     DWORD WINAPI XGameInputGetTouchpadState(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD_STATE* pTouchPad);       // Retrieves the current state of the specified touchpad of the specified controller.
-    DWORD WINAPI XGameInputSetTriggerState(
+    DWORD WINAPI XGameInputSetTriggerEffect(
         DWORD PlayerIndex,
         XGAMEINPUT_TRIGGER_EFFECT trigger,
         XGAMEINPUT_TRIGGER_EFFECT_MODE mode,

@@ -370,7 +370,7 @@ extern "C" {
     }
 
     // NB: This code is at the moment still untested on real hardware as I unforunately do not yet own a DS5 controller.
-    DWORD WINAPI XGameInputSetTriggerState(DWORD PlayerIndex, XGAMEINPUT_TRIGGER_EFFECT trigger, XGAMEINPUT_TRIGGER_EFFECT_MODE mode, const XGAMEINPUT_TRIGGER_EFFECT_PARAM* pEffectParam) {
+    DWORD WINAPI XGameInputSetTriggerEffect(DWORD PlayerIndex, XGAMEINPUT_TRIGGER_EFFECT trigger, XGAMEINPUT_TRIGGER_EFFECT_MODE mode, const XGAMEINPUT_TRIGGER_EFFECT_PARAM* pEffectParam) {
       
       if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX) {
         return ERROR_INVALID_PARAMETER;

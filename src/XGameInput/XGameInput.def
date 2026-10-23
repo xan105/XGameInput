@@ -8,4 +8,4 @@ XGameInputGetBatteryInfo   @5
 XGameInputGetSteamHandle   @6
 XGameInputSetLED		       @7
 XGameInputGetTouchpadState @8
-XGameInputSetTriggerState  @9
+XGameInputSetTriggerEffect @9

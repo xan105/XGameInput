@@ -10,7 +10,7 @@ This project is a modernization of the original XInput API. It aims to preserve 
 
 This is not a 1:1 replacement for the original XInput API. If that's what you're looking for, check out [InputFusion](https://github.com/xan105/InputFusion), the project this is built on.
 
-This is the `XInput2_0.dll` Microsoft never gave us.
+This is the _"XInput2_0.dll"_ Microsoft never gave us.
 
 # What changed over the original XInput?
 
@@ -21,7 +21,7 @@ This is the `XInput2_0.dll` Microsoft never gave us.
   - **Trigger motor support:** `XGameInputSetState()` also supports trigger motors (e.g. Xbox's Impulse triggers).
   
   - **New APIs:**
-    + `XGameInputSetTriggerState()`: (Dualsense) Send a trigger effect to the specified trigger on the specified controller.
+    + `XGameInputSetTriggerEffect()`: (Dualsense) Send a trigger effect to the specified trigger on the specified controller.
     + `XGameInputGetTouchpadState()`: Retrieves the state of fingers on a touchpad.
     + `XGameInputSetLED()`: Updates the gamepad's LED.
     + `XGameInputGetSteamHandle()`: Returns a Steam's [InputHandle_t](https://partner.steamgames.com/doc/api/ISteamInput#InputHandle_t) for better integration with the Steam Input API
@@ -99,12 +99,13 @@ XGameInputSetState(i, &vibration);
 <details>
 <summary>Dualsense Haptic triggers</summary>
 
+
 **Clear both triggers**
 
 ```cpp
-XGameInputSetTriggerState(
+XGameInputSetTriggerEffect(
     playerIndex,
-    XGAMEINPUT_TRIGGER_BOTH,
+    XGAMEINPUT_TRIGGER_EFFECT_BOTH,
     XGAMEINPUT_TRIGGER_EFFECT_MODE_OFF,
     NULL // No parameters are needed for OFF
 );
@@ -119,9 +120,9 @@ vibration.position  = 2;
 vibration.amplitude = 6;
 vibration.frequency = 30;
 
-XGameInputSetTriggerState(
+XGameInputSetTriggerEffect(
   playerIndex,
-  XGAMEINPUT_TRIGGER_BOTH,
+  XGAMEINPUT_TRIGGER_EFFECT_BOTH,
   XGAMEINPUT_TRIGGER_EFFECT_MODE_VIBRATION,
   &vibration
 );
@@ -136,9 +137,9 @@ weapon.start    = 2;
 weapon.end      = 6;
 weapon.strength = 7;
 
-XGameInputSetTriggerState(
+XGameInputSetTriggerEffect(
   playerIndex,
-  XGAMEINPUT_TRIGGER_RIGHT,
+  XGAMEINPUT_TRIGGER_EFFECT_RIGHT,
   XGAMEINPUT_TRIGGER_EFFECT_MODE_WEAPON,
   &weapon
 );
@@ -148,9 +149,9 @@ XGAMEINPUT_TRIGGER_EFFECT_PARAM feedback = {};
 feedback.position = 3;
 feedback.strength = 5;
 
-XGameInputSetTriggerState(
+XGameInputSetTriggerEffect(
   playerIndex,
-  XGAMEINPUT_TRIGGER_LEFT,
+  XGAMEINPUT_TRIGGER_EFFECT_LEFT,
   XGAMEINPUT_TRIGGER_EFFECT_MODE_FEEDBACK,
   &feedback
 );
