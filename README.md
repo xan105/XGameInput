@@ -100,6 +100,7 @@ XGameInputSetState(i, &vibration);
 <details>
 <summary>Dualsense Haptic triggers</summary>
 <br />
+
 **Clear both triggers**
 
 ```cpp
@@ -163,7 +164,7 @@ XGameInputSetTriggerEffect(
 <summary>Gamepad TouchPad</summary>
 
 ```cpp
-XGAMEINPUT_TOUCHPAD_STATE state = {};
+XGAMEINPUT_TOUCHPAD state = {};
 DWORD result = XGameInputGetTouchpad(0, 0, &state);
 if (result == ERROR_SUCCESS) {
     for (WORD i = 0; i < state.FingerCount; ++i)
