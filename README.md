@@ -99,8 +99,7 @@ XGameInputSetState(i, &vibration);
 
 <details>
 <summary>Dualsense Haptic triggers</summary>
-
-
+<br />
 **Clear both triggers**
 
 ```cpp
@@ -157,8 +156,6 @@ XGameInputSetTriggerEffect(
   &feedback
 );
 ```
-
-</details>
 
 </details>
 
@@ -238,6 +235,8 @@ if(result == ERROR_SUCCESS &&
     printf("Battery: %d%%\n", battery.Percent);
 }
 ```
+
+</details>
 
 # Bindings
 
