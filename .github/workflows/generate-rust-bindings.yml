@@ -1,0 +1,37 @@
+name: Generate Rust bindings
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Clang and libclang
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes clang libclang-dev
+
+      - name: Install bindgen CLI
+        run: cargo install bindgen-cli --locked
+
+      - name: Verify header exists
+        run: test -f src/XGameInput/XGameInput.h
+
+      - name: Generate Rust bindings
+        run: |
+          bindgen src/XGameInput/XGameInput.h \
+            --output bindings.rs
+
+      - name: Upload generated bindings
+        uses: actions/upload-artifact@v4
+        with:
+          name: xgameinput-rust-bindings
+          path: bindings.rs
+          if-no-files-found: error
