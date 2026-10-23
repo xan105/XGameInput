@@ -22,7 +22,7 @@ This is the _"XInput2_0.dll"_ Microsoft never gave us.
   
   - **New APIs:**
     + `XGameInputSetTriggerEffect()`: (Dualsense) Send a trigger effect to the specified trigger on the specified controller.
-    + `XGameInputGetTouchpadState()`: Retrieves the state of fingers on a touchpad.
+    + `XGameInputGetTouchpad()`: Retrieves the state of fingers on a touchpad.
     + `XGameInputGetMotionSensors()`: Retrieves the controller's accelerometer and gyroscope data.
     + `XGameInputSetLED()`: Updates the gamepad's LED.
     + `XGameInputGetSteamHandle()`: Returns a Steam's [InputHandle_t](https://partner.steamgames.com/doc/api/ISteamInput#InputHandle_t) for better integration with the Steam Input API
@@ -167,7 +167,7 @@ XGameInputSetTriggerEffect(
 
 ```cpp
 XGAMEINPUT_TOUCHPAD_STATE state = {};
-DWORD result = XGameInputGetTouchpadState(0, 0, &state);
+DWORD result = XGameInputGetTouchpad(0, 0, &state);
 if (result == ERROR_SUCCESS) {
     for (WORD i = 0; i < state.FingerCount; ++i)
     {
