@@ -194,15 +194,17 @@ XGAMEINPUT_MOTION_SENSORS sensors{};
 
 if (XGameInputGetMotionSensors(playerIndex, &sensors) == ERROR_SUCCESS)
 {
-  std::cout << "Accelerometer: "
-            << sensors.Accel[0] << ", "   // X
-            << sensors.Accel[1] << ", "   // Y
-            << sensors.Accel[2] << '\n';  // Z
+  printf("Accelerometer: X=%.3f Y=%.3f Z=%.3f (Rate: %.1f Hz)\n",
+          sensors.Accel[0], // X
+          sensors.Accel[1], // Y
+          sensors.Accel[2], // Z
+          sensors.AccelRate);
 
-  std::cout << "Gyroscope: "
-            << sensors.Gyro[0] << ", "    // X
-            << sensors.Gyro[1] << ", "    // Y
-            << sensors.Gyro[2] << '\n';   // Z
+  printf("Gyroscope: X=%.3f Y=%.3f Z=%.3f (Rate: %.1f Hz)\n",
+          sensors.Gyro[0], // X
+          sensors.Gyro[1], // Y
+          sensors.Gyro[2], // Z
+          sensors.GyroRate);
 }
 ```
 
@@ -243,16 +245,13 @@ if(result == ERROR_SUCCESS &&
 
 // TODO: Write me
 
-# Docs
+Caveats
+=======
 
-// TODO: Write me
+- The first call to any of XGameInput's exported functions may take longer than usual while waiting for SDL to initialize.
 
-If you would like to receive gamepad updates while the application is in the background, you should set the following env. var. `SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1`
-
-`XGameInputGetSteamHandle(DWORD PlayerIndex, UINT64* pInputHandle)`
-    // Returns an InputHandle_t for the gamepad that can be used with Steam Input API: https://partner.steamgames.com/doc/api/ISteamInput
-    // Returns the gamepad handle, or 0 if unavailable.
-    // If you're using SDL gamepad support in a Steam game, you must call SteamAPI_InitEx() before calling SDL_Init().
+- Since Windows 10 the game controller input is automatically enabled/disabled by the system based on the application window focus.
+  If you would like to receive gamepad updates while the application is in the background, you should set the following env. var. `SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1`
 
 # Build
 

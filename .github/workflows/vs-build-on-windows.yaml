@@ -29,7 +29,9 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: build-${{ matrix.configuration }}-${{ matrix.platform }}
-          path: build/**/output/**/*.dll
+          path: |
+            build/**/output/**/*.dll
+            build/**/output/**/*.lib
           compression-level: 0
         
   package:
