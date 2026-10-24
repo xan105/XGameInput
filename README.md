@@ -241,6 +241,10 @@ if(result == ERROR_SUCCESS &&
 
 </details>
 
+> [!TIP]
+> You are welcome to reuse any code from the [testcontroller](./test/testcontroller/src/testcontroller_console/main.cpp) that may be useful for your own projects.
+> It is provided under a different license than the main library.
+
 Caveats
 =======
 
