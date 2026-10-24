@@ -23,6 +23,9 @@ namespace
     constexpr DWORD ControllerIndex = 0;                            // First Slot
     constexpr auto PollInterval = std::chrono::milliseconds(16);    // ~60 Hz while connected
     constexpr auto IdleInterval = std::chrono::milliseconds(250);   // Disconnected polling backs off to 250 ms.
+    constexpr auto RumbleDuration = std::chrono::milliseconds(200);
+    constexpr WORD RumbleLeftMotor = 32000;
+    constexpr WORD RumbleRightMotor = 32000;
 
     struct ButtonInfo
     {
@@ -58,6 +61,15 @@ namespace
         { XGAMEINPUT_BUTTON_MISC5,              "MISC5" },
         { XGAMEINPUT_BUTTON_MISC6,              "MISC6" }
     } };
+
+    void SetRumble(WORD leftMotor, WORD rightMotor)
+    {
+        XGAMEINPUT_VIBRATION vibration{};
+        vibration.LeftMotorSpeed = leftMotor;
+        vibration.RightMotorSpeed = rightMotor;
+
+        XGameInputSetState(ControllerIndex, &vibration);
+    }
 
     void LogButtonChanges(DWORD previous, DWORD current)
     {
@@ -361,6 +373,8 @@ int main()
     bool connected = false;
     bool motionMode = false;
     DWORD previousButtons = 0;
+    auto rumbleEnd = std::chrono::steady_clock::time_point{};
+    bool rumbling = false;
 
     while (true)
     {
@@ -378,6 +392,8 @@ int main()
             // Exit
             if (gamepad.Buttons & XGAMEINPUT_BUTTON_GUIDE)
             {
+                SetRumble(0, 0);
+                rumbling = false;
                 std::cout << "\n[INFO] GUIDE button pressed. Force exiting.\n" << std::flush;
                 return 0;
             }
@@ -409,6 +425,22 @@ int main()
                     << '\n';
             }
 
+            // Vibrate briefly when any button is newly pressed.
+            const DWORD newlyPressed = gamepad.Buttons & ~previousButtons;
+            if (newlyPressed != 0)
+            {
+                SetRumble(RumbleLeftMotor, RumbleRightMotor);
+                rumbleEnd = std::chrono::steady_clock::now() + RumbleDuration;
+                rumbling = true;
+            }
+
+            // Explicitly stop rumble when the duration expires.
+            if (rumbling && std::chrono::steady_clock::now() >= rumbleEnd)
+            {
+                SetRumble(0, 0);
+                rumbling = false;
+            }
+
             LogButtonChanges(previousButtons, gamepad.Buttons);
 
             if (IsTouchpadFingerDown(ControllerIndex))
@@ -430,6 +462,8 @@ int main()
         {
             if (connected)
             {
+                SetRumble(0, 0);
+                rumbling = false;
                 connected = false;
                 previousButtons = 0;
                 std::cout << "\n[INFO] Device disconnected\n";
