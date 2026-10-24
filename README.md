@@ -21,7 +21,7 @@ This is the _"XInput2_0.dll"_ Microsoft never gave us.
   - **Trigger motor support:** `XGameInputSetState()` also supports trigger motors (e.g. Xbox's Impulse triggers).
   
   - **New APIs:**
-    + `XGameInputSetTriggerEffect()`: (Dualsense) Send a trigger effect to the specified trigger on the specified controller.
+    + `XGameInputSetTriggerEffect()`: (Dualsense) Send a trigger effect (weapon, vibration, feedback).
     + `XGameInputGetTouchpad()`: Retrieves the state of fingers on a touchpad.
     + `XGameInputGetMotionSensors()`: Retrieves the controller's accelerometer and gyroscope data.
     + `XGameInputSetLED()`: Updates the gamepad's LED.
@@ -244,7 +244,7 @@ if(result == ERROR_SUCCESS &&
 Caveats
 =======
 
-- The first call to any of XGameInput's exported functions may take longer than usual while waiting for SDL to initialize.
+- While waiting for SDL to initialize, the first call to any of XGameInput's exported functions is stalled and may take longer than usual.
 
 - Since Windows 10 the game controller input is automatically enabled/disabled by the system based on the application window focus.
   If you would like to receive gamepad updates while the application is in the background, you should set the following env. var. `SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1`
