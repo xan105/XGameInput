@@ -156,19 +156,28 @@ typedef struct _XGAMEINPUT_TOUCHPAD                             // Represents th
 
 typedef struct _XGAMEINPUT_MOTION_SENSORS                       // Represents the current accelerometer and gyroscope data of the sensors.
 {
-  float Accel[XGAMEINPUT_MOTION_SENSORS_AXIS];                  // Accelerometer (X,Y,Z).
-  float AccelRate;                                              // Accelerometer data rate (number of events per second).
-  float AccelLeft[XGAMEINPUT_MOTION_SENSORS_AXIS];              // Accelerometer for left Joy-Con controller and Wii nunchuk (X,Y,Z).
-  float AccelLeftRate;                                          // Accelerometer for left Joy-Con controller and Wii nunchuk data rate (number of events per second).
-  float AccelRight[XGAMEINPUT_MOTION_SENSORS_AXIS];             // Accelerometer for right Joy-Con controller (X,Y,Z).
-  float AccelRightRate;                                         // Accelerometer for right Joy-Con controller data rate (number of events per second).
-  float Gyro[XGAMEINPUT_MOTION_SENSORS_AXIS];                   // Gyroscope (X,Y,Z).
-  float GyroRate;                                               // Gyroscope data rate (number of events per second).
-  float GyroLeft[XGAMEINPUT_MOTION_SENSORS_AXIS];               // Gyroscope for left Joy-Con controller (X,Y,Z).
-  float GyroLeftRate;                                           // Gyroscope for left Joy-Con controller data rate (number of events per second).
-  float GyroRight[XGAMEINPUT_MOTION_SENSORS_AXIS];              // Gyroscope for right Joy-Con controller (X,Y,Z).
-  float GyroRightRate;                                          // Gyroscope for right Joy-Con controller data rate (number of events per second).
+    float Accel[XGAMEINPUT_MOTION_SENSORS_AXIS];                // Accelerometer (X,Y,Z).
+    float AccelRate;                                            // Accelerometer data rate (number of events per second).
+    float AccelLeft[XGAMEINPUT_MOTION_SENSORS_AXIS];            // Accelerometer for left Joy-Con controller and Wii nunchuk (X,Y,Z).
+    float AccelLeftRate;                                        // Accelerometer for left Joy-Con controller and Wii nunchuk data rate (number of events per second).
+    float AccelRight[XGAMEINPUT_MOTION_SENSORS_AXIS];           // Accelerometer for right Joy-Con controller (X,Y,Z).
+    float AccelRightRate;                                       // Accelerometer for right Joy-Con controller data rate (number of events per second).
+    float Gyro[XGAMEINPUT_MOTION_SENSORS_AXIS];                 // Gyroscope (X,Y,Z).
+    float GyroRate;                                             // Gyroscope data rate (number of events per second).
+    float GyroLeft[XGAMEINPUT_MOTION_SENSORS_AXIS];             // Gyroscope for left Joy-Con controller (X,Y,Z).
+    float GyroLeftRate;                                         // Gyroscope for left Joy-Con controller data rate (number of events per second).
+    float GyroRight[XGAMEINPUT_MOTION_SENSORS_AXIS];            // Gyroscope for right Joy-Con controller (X,Y,Z).
+    float GyroRightRate;                                        // Gyroscope for right Joy-Con controller data rate (number of events per second).
 } XGAMEINPUT_MOTION_SENSORS, *PXGAMEINPUT_MOTION_SENSORS;
+
+/* SDL 3.6
+typedef struct _XGAMEINPUT_CAPSENSE                             // Represents the current state of the capacitive sensors.
+{
+    bool StickLeft;                                             // Activated by touching the top of the analog left stick.
+    bool StickRight;                                            // Activated by touching the top of the analog right stick.
+    bool GripLeft;                                              // Activated by gripping the left handle of the controller.
+    bool GripRight;                                             // Activated by gripping the right handle of the controller.
+} XGAMEINPUT_CAPSENSE, *PXGAMEINPUT_CAPSENSE;*/
 
 // Dualsense (DS5)
 typedef enum _XGAMEINPUT_TRIGGER_EFFECT {
@@ -204,6 +213,8 @@ typedef DWORD(WINAPI* XGameInputGetSteamHandle_t)(DWORD PlayerIndex, UINT64* pIn
 typedef DWORD(WINAPI* XGameInputSetLED_t)(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);
 typedef DWORD(WINAPI* XGameInputGetTouchpad_t)(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD* pTouchPad);
 typedef DWORD(WINAPI* XGameInputGetMotionSensors_t)(DWORD PlayerIndex, XGAMEINPUT_MOTION_SENSORS* pSensors);
+/* SDL 3.6
+typedef DWORD(WINAPI* XGameInputGetCapSense_t)(DWORD PlayerIndex, XGAMEINPUT_CAPSENSE* pCapSense);*/
 typedef DWORD(WINAPI* XGameInputSetTriggerEffect_t)(
     DWORD PlayerIndex,
     XGAMEINPUT_TRIGGER_EFFECT trigger,
@@ -226,6 +237,8 @@ extern "C" {
     DWORD WINAPI XGameInputSetLED(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB);                                       // Update the specified controller's LED color.
     DWORD WINAPI XGameInputGetTouchpad(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD* pTouchPad);                  // Retrieves the current state of the specified touchpad of the specified controller.
     DWORD WINAPI XGameInputGetMotionSensors(DWORD PlayerIndex, XGAMEINPUT_MOTION_SENSORS* pSensors);                            // Retrieves the current state of the motions sensors (accelerometer and gyroscope data) of the specified controller.
+    /* SDL 3.6
+    DWORD WINAPI XGameInputGetCapSense(DWORD PlayerIndex, XGAMEINPUT_CAPSENSE* pCapSense);*/                                      // Retrieves the current state of the capacitive sensors of the specified controller.
     DWORD WINAPI XGameInputSetTriggerEffect(
         DWORD PlayerIndex,
         XGAMEINPUT_TRIGGER_EFFECT trigger,

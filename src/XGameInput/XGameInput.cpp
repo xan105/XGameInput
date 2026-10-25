@@ -420,6 +420,45 @@ extern "C" {
         return ERROR_SUCCESS;
     }
 
+    /* SDL 3.6
+    DWORD WINAPI XGameInputGetCapSense(DWORD PlayerIndex, XGAMEINPUT_CAPSENSE* pCapSense) {
+        if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pCapSense == nullptr) {
+            return ERROR_INVALID_PARAMETER;
+        }
+
+        InputFusion_SDL_Wait_ready();
+
+        SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
+        if (gamepad == nullptr) {
+            return ERROR_DEVICE_NOT_CONNECTED;
+        }
+
+        ZeroMemory(pCapSense, sizeof(XGAMEINPUT_CAPSENSE));
+
+        SDL_UpdateGamepads();
+
+        struct Sensor {
+            SDL_GamepadCapSenseType type;
+            bool* state;
+        };
+
+        std::vector<Sensor> sensors = {
+          { SDL_GAMEPAD_CAPSENSE_LEFT_STICK,    &pCapSense->StickLeft    },
+          { SDL_GAMEPAD_CAPSENSE_RIGHT_STICK,   &pCapSense->StickRight   },
+          { SDL_GAMEPAD_CAPSENSE_LEFT_GRIP,     &pCapSense->GripLeft     },
+          { SDL_GAMEPAD_CAPSENSE_RIGHT_GRIP,    &pCapSense->GripRight    }
+        };
+
+        for (const auto& sensor : sensors)
+        {
+            if (!SDL_GamepadHasCapSense(gamepad, sensor.type)) continue;
+            *sensor.state = SDL_GetGamepadCapSense(gamepad, sensor.type);
+        }
+
+        return ERROR_SUCCESS;
+    }
+    */
+
     // NB: This code is at the moment still untested on real hardware as I unforunately do not yet own a DS5 controller.
     DWORD WINAPI XGameInputSetTriggerEffect(DWORD PlayerIndex, XGAMEINPUT_TRIGGER_EFFECT trigger, XGAMEINPUT_TRIGGER_EFFECT_MODE mode, const XGAMEINPUT_TRIGGER_EFFECT_PARAM* pEffectParam) {
       
