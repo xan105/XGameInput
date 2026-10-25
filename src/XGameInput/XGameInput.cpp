@@ -519,16 +519,16 @@ extern "C" {
       }
       
       InputFusion_SDL_Wait_ready();
-      
+
       SDL_Gamepad* gamepad = SDL_GetGamepadFromPlayerIndex(PlayerIndex);
       if (gamepad == nullptr) {
-        return ERROR_DEVICE_NOT_CONNECTED;
+          return ERROR_DEVICE_NOT_CONNECTED;
       }
-      
-      dualsense::SetTriggerEffect(gamepad, trigger_mask, effect);
-      
-      SDL_UpdateGamepads();
-      
+
+      if (dualsense::SetTriggerEffect(gamepad, trigger_mask, effect)) {
+          SDL_UpdateGamepads();
+      }
+
       return ERROR_SUCCESS;
     }
 }

@@ -31,6 +31,11 @@ namespace dualsense {
         if (trigger_mask == 0 || (trigger_mask & ~DS5_TRIGGER_EFFECT_BOTH) != 0) {
             return false;
         }
+
+        SDL_GamepadType type = SDL_GetGamepadType(gamepad);
+        if (type != SDL_GAMEPAD_TYPE_PS5) {
+            return false;
+        }
         
         SDL_DS5_EffectsState effects;
         SDL_zero(effects);
