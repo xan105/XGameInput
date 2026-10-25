@@ -245,6 +245,16 @@ if(result == ERROR_SUCCESS &&
 > You are welcome to reuse any code from the [testcontroller](./test/testcontroller/src/testcontroller_console/main.cpp) that may be useful for your own projects.
 > It is provided under a different license than the main library.
 
+# Bindings
+
+Bindings for other languages:
+
+- [Go](./bindings/Go/xgameinput_windows.go)
+- [Rust](./bindings/Rust/xgameinput_windows.rs)
+
+> [!NOTE]
+> These bindings were machine-generated. I'll replace them with proper ones later. This should be enough to get things going for now.
+
 Caveats
 =======
 
@@ -279,16 +289,6 @@ The public header supports both `C` and `C++`.
 `./.github/workflows/vs-build-on-windows.yaml`
 
 Build all targets (debug and release) and create a release.
-
-# Bindings
-
-Bindings for other languages:
-
-- [Go](./bindings/Go/xgameinput_windows.go)
-- [Rust](./bindings/Rust/xgameinput_windows.rs)
-
-> [!NOTE]
-> These bindings were machine-generated. I'll replace them with proper ones later. This should be enough to get things going for now.
 
 Licensing FAQ
 =============
