@@ -128,13 +128,13 @@ extern "C" {
             gamepad,
             pVibration->LeftMotorSpeed,
             pVibration->RightMotorSpeed,
-            0
+            pVibration->Duration
         );
         SDL_RumbleGamepadTriggers(
             gamepad,
             pVibration->LeftTriggerSpeed,
             pVibration->RightTriggerSpeed,
-            0
+            pVibration->Duration
         );
         SDL_UpdateGamepads();
 

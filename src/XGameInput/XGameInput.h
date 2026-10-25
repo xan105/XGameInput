@@ -115,6 +115,7 @@ typedef struct _XGAMEINPUT_VIBRATION                            // Specifies mot
     WORD    RightMotorSpeed;                                    // Speed of the right motor. Valid values range from 0 through 65535. Zero signifies that the motor is not used at all, and 65535 signifies that the motor is used at 100 percent.
     WORD    LeftTriggerSpeed;                                   // Speed of the left trigger motor. Valid values range from 0 through 65535. Zero signifies that the motor is not used at all, and 65535 signifies that the motor is used at 100 percent.
     WORD    RightTriggerSpeed;                                  // Speed of the right trigger motor. Valid values range from 0 through 65535. Zero signifies that the motor is not used at all, and 65535 signifies that the motor is used at 100 percent.
+    DWORD   Duration;                                           // Duration of the motor in milliseconds. Use 0 for manual control meaning you handle the reset of the motor and the associated timing yourself.
 } XGAMEINPUT_VIBRATION, *PXGAMEINPUT_VIBRATION;
 
 typedef struct _XGAMEINPUT_GAMEPAD_LED                          // Specifies a gamepad's LED color. For gamepads with a single color LED, the maximum of the RGB values will be used as the LED brightness.
