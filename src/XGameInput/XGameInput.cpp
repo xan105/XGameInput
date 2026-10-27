@@ -67,7 +67,7 @@ extern "C" {
     DWORD WINAPI XGameInputGetState(DWORD PlayerIndex, XGAMEINPUT_GAMEPAD* pGamepad) {
 
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pGamepad == nullptr) {
-            return ERROR_INVALID_PARAMETER;
+            return ERROR_BAD_ARGUMENTS;
         }
 
         InputFusion_SDL_Wait_ready();
@@ -114,7 +114,7 @@ extern "C" {
 
     DWORD WINAPI XGameInputSetState(DWORD PlayerIndex, const XGAMEINPUT_VIBRATION* pVibration) {
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pVibration == nullptr) {
-            return ERROR_INVALID_PARAMETER;
+            return ERROR_BAD_ARGUMENTS;
         }
 
         InputFusion_SDL_Wait_ready();
@@ -143,7 +143,7 @@ extern "C" {
 
     DWORD WINAPI XGameInputSetLED(DWORD PlayerIndex, const XGAMEINPUT_GAMEPAD_LED* pRGB) {
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pRGB == nullptr) {
-            return ERROR_INVALID_PARAMETER;
+            return ERROR_BAD_ARGUMENTS;
         }
 
         InputFusion_SDL_Wait_ready();
@@ -160,7 +160,7 @@ extern "C" {
 
     DWORD WINAPI XGameInputGetBatteryInfo(DWORD PlayerIndex, XGAMEINPUT_BATTERY_INFORMATION* pBatteryInfo) {
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pBatteryInfo == nullptr) {
-            return ERROR_INVALID_PARAMETER;
+            return ERROR_BAD_ARGUMENTS;
         }
 
         InputFusion_SDL_Wait_ready();
@@ -196,7 +196,7 @@ extern "C" {
     DWORD WINAPI XGameInputGetCapabilities(DWORD PlayerIndex, XGAMEINPUT_CAPABILITIES* pCapabilities) {
 
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pCapabilities == nullptr) {
-            return ERROR_INVALID_PARAMETER;
+            return ERROR_BAD_ARGUMENTS;
         }
 
         InputFusion_SDL_Wait_ready();
@@ -306,7 +306,7 @@ extern "C" {
     DWORD WINAPI XGameInputGetSteamHandle(DWORD PlayerIndex, UINT64* pInputHandle) {
     
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pInputHandle == nullptr) {
-            return ERROR_INVALID_PARAMETER;
+            return ERROR_BAD_ARGUMENTS;
         }
 
         InputFusion_SDL_Wait_ready();
@@ -324,7 +324,7 @@ extern "C" {
     DWORD WINAPI XGameInputGetTouchpad(DWORD PlayerIndex, WORD TouchPadIndex, XGAMEINPUT_TOUCHPAD* pTouchPad) {
 
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pTouchPad == nullptr) {
-            return ERROR_INVALID_PARAMETER;
+            return ERROR_BAD_ARGUMENTS;
         }
 
         InputFusion_SDL_Wait_ready();
@@ -375,7 +375,7 @@ extern "C" {
     DWORD WINAPI XGameInputGetMotionSensors(DWORD PlayerIndex, XGAMEINPUT_MOTION_SENSORS* pSensors) {
 
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pSensors == nullptr) {
-            return ERROR_INVALID_PARAMETER;
+            return ERROR_BAD_ARGUMENTS;
         }
 
         InputFusion_SDL_Wait_ready();
@@ -423,7 +423,7 @@ extern "C" {
     /* SDL 3.6
     DWORD WINAPI XGameInputGetCapSense(DWORD PlayerIndex, XGAMEINPUT_CAPSENSE* pCapSense) {
         if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX || pCapSense == nullptr) {
-            return ERROR_INVALID_PARAMETER;
+            return ERROR_BAD_ARGUMENTS;
         }
 
         InputFusion_SDL_Wait_ready();
@@ -463,11 +463,11 @@ extern "C" {
     DWORD WINAPI XGameInputSetTriggerEffect(DWORD PlayerIndex, XGAMEINPUT_TRIGGER_EFFECT trigger, XGAMEINPUT_TRIGGER_EFFECT_MODE mode, const XGAMEINPUT_TRIGGER_EFFECT_PARAM* pEffectParam) {
       
       if (PlayerIndex >= XGAMEINPUT_PLAYER_MAX) {
-        return ERROR_INVALID_PARAMETER;
+        return ERROR_BAD_ARGUMENTS;
       }
       
       if (mode != XGAMEINPUT_TRIGGER_EFFECT_MODE_OFF && pEffectParam == nullptr) {
-          return ERROR_INVALID_PARAMETER;
+          return ERROR_BAD_ARGUMENTS;
       }
 
       uint8_t trigger_mask = DS5_TRIGGER_EFFECT_BOTH;
@@ -485,7 +485,7 @@ extern "C" {
           break;
         }
         default: {
-          return ERROR_INVALID_PARAMETER;
+          return ERROR_BAD_ARGUMENTS;
         }
       }
 
@@ -497,24 +497,24 @@ extern "C" {
         }
         case XGAMEINPUT_TRIGGER_EFFECT_MODE_FEEDBACK: {
             if (!dualsense::CreateFeedbackEffect(effect, pEffectParam->position, pEffectParam->strength)) {
-              return ERROR_INVALID_PARAMETER;
+              return ERROR_BAD_ARGUMENTS;
             }
             break;
         }
         case XGAMEINPUT_TRIGGER_EFFECT_MODE_WEAPON: {
             if (!dualsense::CreateWeaponEffect(effect, pEffectParam->start, pEffectParam->end, pEffectParam->strength)) {
-                return ERROR_INVALID_PARAMETER;
+                return ERROR_BAD_ARGUMENTS;
             }
           break;
         }
         case XGAMEINPUT_TRIGGER_EFFECT_MODE_VIBRATION: {
             if (!dualsense::CreateVibrationEffect(effect, pEffectParam->position, pEffectParam->amplitude, pEffectParam->frequency)){
-                return ERROR_INVALID_PARAMETER;
+                return ERROR_BAD_ARGUMENTS;
             }
             break;
         }
         default: {
-          return ERROR_INVALID_PARAMETER;
+          return ERROR_BAD_ARGUMENTS;
         }
       }
       
